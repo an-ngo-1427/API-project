@@ -8,6 +8,24 @@ const bcrypt = require('bcryptjs');
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models');
 
+router.get('/',(req,res)=>{
+    const {user} = req;
+    console.log(user)
+    if(user){
+        const safeUser = {
+            id:user.id,
+            username:user.username,
+            email:user.email
+        }
+        return res.json({
+            user:safeUser
+        });
+    }else{
+        return res.json({
+            user:null
+        })
+    }
+})
 router.post('/',async(req,res,next)=>{
     const{password,credential} = req.body
     const user = await User.unscoped().findOne({
