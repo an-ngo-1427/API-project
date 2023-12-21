@@ -27,9 +27,10 @@ const validateLogin = [
 // restore user
 router.get('/',(req,res)=>{
     const {user} = req;
-    console.log(user)
     if(user){
         const safeUser = {
+            firstName:user.firstName,
+            lastName:user.lastName,
             id:user.id,
             username:user.username,
             email:user.email
@@ -65,6 +66,8 @@ router.post('/',validateLogin,async(req,res,next)=>{
     }
 
     const safeUser = {
+        firstName:user.firstName,
+        lastName:user.lastName,
         id:user.id,
         email:user.email,
         username:user.username

@@ -14,6 +14,12 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 // validate signup middleware
 const validateSignup = [
+    check('firstName')
+      .exists({ checkFalsy:true})
+      .withMessage('Please provide your first name'),
+    check('lastName')
+      .exists({ checkFalsy:true})
+      .withMessage('Please provide your last name'),
     check('email')
       .exists({ checkFalsy: true })
       .isEmail()
@@ -36,15 +42,19 @@ const validateSignup = [
 
 // sign up end point
 router.post('/',validateSignup,async (req,res)=>{
-    const {email,username,password} = req.body;
+    const {email,username,password,firstName,lastName} = req.body;
     const hashedPassword = bcrypt.hashSync(password);
     const user = await User.create({
+        firstName,
+        lastName,
         email,
         username,
         hashedPassword
     })
 
     const safeUser = {
+        firstName:user.firstName,
+        lastName:user.lastName,
         id:user.id,
         username:user.username,
         email:user.email
