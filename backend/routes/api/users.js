@@ -40,7 +40,7 @@ const validateSignup = [
   ];
 
 
-// sign up end point
+// sign up end point POST /api/users
 router.post('/',validateSignup,async (req,res)=>{
     const {email,username,password,firstName,lastName} = req.body;
     const hashedPassword = bcrypt.hashSync(password);

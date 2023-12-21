@@ -24,7 +24,7 @@ const validateLogin = [
   ];
 
 
-// restore user
+// restore user GET /api/session
 router.get('/',(req,res)=>{
     const {user} = req;
     if(user){
@@ -45,7 +45,7 @@ router.get('/',(req,res)=>{
     }
 })
 
-// login endpoint
+// login endpoint POST /api/session
 router.post('/',validateLogin,async(req,res,next)=>{
     const{password,credential} = req.body
     const user = await User.unscoped().findOne({
