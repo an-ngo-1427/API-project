@@ -24,7 +24,7 @@ const validateLogin = [
   ];
 
 
-
+// restore user
 router.get('/',(req,res)=>{
     const {user} = req;
     console.log(user)
@@ -43,6 +43,8 @@ router.get('/',(req,res)=>{
         })
     }
 })
+
+// login endpoint
 router.post('/',validateLogin,async(req,res,next)=>{
     const{password,credential} = req.body
     const user = await User.unscoped().findOne({
@@ -75,6 +77,8 @@ router.post('/',validateLogin,async(req,res,next)=>{
     })
 })
 
+
+// logout endpoint
 router.delete('/',(req,res)=>{
     res.clearCookie('token');
     return res.json({
