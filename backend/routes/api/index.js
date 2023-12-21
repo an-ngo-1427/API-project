@@ -2,8 +2,11 @@
 const router = require('express').Router();
 
 
-router.post('/test', function(req, res) {
-    res.json({ requestBody: req.body });
-  });
+const{setTokenCookie,restoreUser,requireAuth} = require('../../utils/auth.js');
+const {User} = require('../../db/models');
+router.use(restoreUser);
+
+
+
 
 module.exports = router;
