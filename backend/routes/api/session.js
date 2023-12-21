@@ -8,6 +8,23 @@ const bcrypt = require('bcryptjs');
 const { setTokenCookie, restoreUser } = require('../../utils/auth');
 const { User } = require('../../db/models');
 
+const {check} = require('express-validator');
+const {handleValidationErrors} = require('../../utils/validation.js');
+
+// middleware to validate login inputs from users
+const validateLogin = [
+    check('credential')
+      .exists({ checkFalsy: true })
+      .notEmpty()
+      .withMessage('Please provide a valid email or username.'),
+    check('password')
+      .exists({ checkFalsy: true })
+      .withMessage('Please provide a password.'),
+    handleValidationErrors
+  ];
+
+
+
 router.get('/',(req,res)=>{
     const {user} = req;
     console.log(user)
@@ -26,7 +43,7 @@ router.get('/',(req,res)=>{
         })
     }
 })
-router.post('/',async(req,res,next)=>{
+router.post('/',validateLogin,async(req,res,next)=>{
     const{password,credential} = req.body
     const user = await User.unscoped().findOne({
         where:{
