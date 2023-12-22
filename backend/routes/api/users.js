@@ -12,7 +12,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 
 
 
-// validate signup middleware
+// validate signup middleware testing
 const validateSignup = [
     check('email')
       .exists({ checkFalsy: true })
