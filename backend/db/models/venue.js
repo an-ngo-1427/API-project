@@ -11,15 +11,62 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Venue.belongsTo(models.Group,{
+        foreignKey:'groupId',
+
+      })
     }
   }
   Venue.init({
     groupId: DataTypes.INTEGER,
-    address: DataTypes.STRING,
-    city: DataTypes.STRING,
-    state: DataTypes.STRING,
-    lat: DataTypes.DECIMAL,
-    lng: DataTypes.DECIMAL
+    address:{
+      type:DataTypes.STRING,
+      // allowNull:false,
+      validate:{
+        notEmpty:{
+          msg:"Street address is required"
+        }
+
+      }
+    } ,
+    city: {
+      type:DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        notEmpty:{
+          msg:"City is required"
+        }
+      }
+    },
+    state:{
+      type:  DataTypes.STRING,
+      allowNull:false,
+      validate:{
+        notEmpty:{
+          msg:"State is required"
+        }
+      }
+    },
+    lat:{
+      type:DataTypes.DECIMAL,
+      validate:{
+        isBetween(value){
+          if(value<-90 || value >90){
+            throw new Error('Latitude must be within -90 and 90')
+          }
+        }
+      }
+    },
+    lng:{
+      type:DataTypes.DECIMAL,
+      validate:{
+        isBetween(value){
+          if(value< -180 || value > 180){
+            throw new Error('Longitude must be within -180 and 180')
+          }
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Venue',

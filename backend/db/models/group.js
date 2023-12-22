@@ -14,6 +14,12 @@ module.exports = (sequelize, DataTypes) => {
       Group.belongsTo(models.User,{
         foreignKey:"organizerId",
       })
+
+      Group.hasMany(models.Venue,{
+        foreignKey:'groupId',
+        onDelete:'SET NULL',
+        hooks:true
+      })
     }
   }
   Group.init({
