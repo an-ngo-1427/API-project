@@ -19,14 +19,14 @@ module.exports = {
     await Group.bulkCreate([
       {
         name:"Gamers",
-        about:"playing video games together and sharing your gaming experience",
+        about:"playing video games and chatting about video games ",
         type:"Online",
         private:false,
         city:"Seattle",
         state:"WA",
         organizerId:1,
       }
-    ])
+    ],{validate:true})
   },
 
   async down (queryInterface, Sequelize) {
