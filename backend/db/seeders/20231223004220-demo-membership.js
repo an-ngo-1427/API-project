@@ -1,10 +1,11 @@
 'use strict';
-const {Event} = require('../models')
 let options={};
-if(process.env.NODE_ENV === 'production'){
+if(process.env.NODE_ENV==='production'){
   options.schema = process.env.SCHEMA
 }
-options.tableName = "Events"
+
+options.tableName = 'Memberships'
+const{Membership} = require('../models')
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -17,19 +18,13 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await Event.bulkCreate([
-      {
-        venueId:1,
-        groupId:1,
-        name:"sadfas",
-        description:"sadcase",
-        type:"sdcawe",
-        capacity:123,
-        price:231,
-        startDate: '2023-12-12',
-        endDate: '2023-12-12'
-      }
-    ],{validate:true})
+   await Membership.bulkCreate([
+    {
+      userId:1,
+      groupId:1,
+      status:'asdf',
+    }
+   ],{validate:true})
   },
 
   async down (queryInterface, Sequelize) {
@@ -40,7 +35,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete(options,{
-      name:'sadfas'
+      status:'asdf'
     })
   }
 
