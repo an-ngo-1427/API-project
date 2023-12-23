@@ -1,9 +1,10 @@
 'use strict';
-let options = {};
+const {Event} = require('../models')
+let options={};
 if(process.env.NODE_ENV === 'production'){
   options.schema = process.env.SCHEMA
 }
-const {Group} = require('../models')
+options.tableName = "Events"
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -16,15 +17,17 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await Group.bulkCreate([
+    await Event.bulkCreate([
       {
-        name:"Gamers",
-        about:"playing video games and chatting about video games ",
-        type:"Online",
-        private:false,
-        city:"Seattle",
-        state:"WA",
-        organizerId:1,
+        venueId:1,
+        groupId:1,
+        name:"sadfas",
+        description:"sadcase",
+        type:"sdcawe",
+        capacity:123,
+        price:231,
+        startDate: 2023-12-12,
+        endDate: 2023-12-12
       }
     ],{validate:true})
   },
@@ -36,9 +39,9 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    options.tableName = 'Groups'
     await queryInterface.bulkDelete(options,{
-      name:"Gamers"
+      name:'sadfas'
     })
   }
+
 };

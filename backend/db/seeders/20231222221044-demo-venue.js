@@ -2,7 +2,7 @@
 let options = {}
 const {Venue} = require('../models')
 if (process.env.NODE_ENV === 'production'){
-  options.schema = SCHEMA
+  options.schema = process.env.SCHEMA
 }
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    Venue.bulkCreate([
+    await Venue.bulkCreate([
       {
         address:"575 Bellevue Square",
         city:'Bellevue',
@@ -35,6 +35,9 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-
+    options.tableName = "Venues"
+    await queryInterface.bulkDelete(options,{
+      city:'Bellevue'
+    })
   }
 };
