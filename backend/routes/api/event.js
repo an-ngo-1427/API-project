@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {Event,Group,Venue} = require('../../db/models');
+const {Event,Group,Venue,EventImage} = require('../../db/models');
 
 
 router.get('/',async (req,res)=>{
@@ -19,6 +19,33 @@ router.get('/',async (req,res)=>{
     });
     res.json({
         events
+    })
+})
+
+//get details of an event specified by its ID
+router.get('/:eventId',async (req,res)=>{
+    const event = await Event.findByPk(req.params.eventId,{
+        include:[
+            {
+                model:Group
+            },
+            {
+                model:Venue
+            },
+            {
+                model:EventImage
+            }
+        ]
+    });
+
+    if(!event){
+        res.statusCode=404;
+        return res.json({
+            "message": "Event couldn't be found"
+        })
+    }
+    res.json({
+        event
     })
 })
 

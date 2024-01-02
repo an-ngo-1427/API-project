@@ -1,9 +1,9 @@
 const express = require('express');
-const {Group,User,GroupImage,Venue} = require('../../db/models');
+const {Group,User,GroupImage,Venue,Event} = require('../../db/models');
 const {check} = require('express-validator')
 router = express.Router();
 const {restoreUser,requireAuth} = require('../../utils/auth.js')
-const {handleValidationErrors,validateGroup,validateVenue} = require('../../utils/validation.js')
+const {handleValidationErrors,validateGroup,validateVenue,validateEvent} = require('../../utils/validation.js')
 router.get('/',async (req,res)=>{
     console.log(Group)
     const groups = await Group.findAll();
@@ -198,6 +198,70 @@ router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (re
     res.json({
         newVenue
     })
+})
+
+// getting all events of a group by specified id
+router.get('/:groupId/events',async (req,res)=>{
+    const group = await Group.findByPk(req.params.groupId);
+
+    if(!group){
+        res.statudCode=404;
+        return res.json({
+            "message": "Group couldn't be found"
+        })
+    }
+    const events =  await group.getEvents({
+        include:[
+            {
+                model:Group
+            },
+            {
+                model:Venue
+            }
+        ]
+    });
+    res.json({
+        events
+    })
+})
+
+// creating an event for a group by specified ID
+router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
+    const group = await Group.findByPk(req.params.groupId,{
+        attributes:['id']
+    })
+
+    if(!group){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Group couldn't be found"
+        })
+    }
+
+    if(req.user.id !== group.id){
+        res.statusCode = 403;
+        return res.json({
+            "message": "Forbidden"
+        })
+    }
+
+    const{name,type,capicity,price,description,startDate,endDate} = req.body;
+
+    const newEvent = await Event.create({
+        name,
+        type,
+        capicity,
+        price,
+        description,
+        startDate,
+        endDate
+    })
+    res.json({
+        newEvent
+    })
+
+
+
 })
 
 

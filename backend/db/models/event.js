@@ -24,6 +24,12 @@ module.exports = (sequelize, DataTypes) => {
         onDelete:'CASCADE',
         hooks:true
       })
+
+      Event.hasMany(models.EventImage,{
+        foreignKey:'eventId',
+        onDelete:'CASCADE',
+        hooks:true
+      })
     }
   }
   Event.init({
@@ -40,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     type: DataTypes.STRING,
     capacity: DataTypes.INTEGER,
-    price: DataTypes.INTEGER,
+    price: DataTypes.DECIMAL,
     startDate: DataTypes.DATE(6),
     endDate: DataTypes.DATE(6),
     venueId:DataTypes.INTEGER,
@@ -48,6 +54,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Event',
+    defaultScope:{
+      attributes:{
+        exclude:['updatedAt','createdAt']
+      }
+    }
   });
   return Event;
 };
