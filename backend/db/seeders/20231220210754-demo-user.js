@@ -6,6 +6,7 @@ if(process.env.NODE_ENV === 'production'){
   options.schema = process.env.SCHEMA
 }
 
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -20,8 +21,8 @@ module.exports = {
     */
     await User.bulkCreate([
       {
-        firstName:"An",
-        lastName:"Ngo",
+        firstName:"firstName",
+        lastName:"lastName",
         email: 'demo@user.io',
         username: 'Demo-lition',
         hashedPassword: bcrypt.hashSync('password')
