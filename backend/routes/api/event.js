@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const {Event,Group,Venue,EventImage} = require('../../db/models');
-
+const {restoreUser,requireAuth} = require('../../utils/auth.js');
 
 router.get('/',async (req,res)=>{
     const events = await Event.findAll({
@@ -47,6 +47,23 @@ router.get('/:eventId',async (req,res)=>{
     res.json({
         event
     })
+})
+
+//adding eventimages to an event based the ID
+router.post('/:eventId/images',[requireAuth],async (req,res)=>{
+    const event = await Event.findByPk(req.params.eventId);
+
+    if(!event){
+        res.statusCode = 404;
+        res.json({
+            "message": "Event couldn't be found"
+        })
+    }
+
+
+
+    const{url,preview} = req.body;
+
 })
 
 module.exports = router

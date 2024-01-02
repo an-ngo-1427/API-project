@@ -46,6 +46,7 @@ router.get('/:groupId',async (req,res)=>{
 router.post('/',[restoreUser,requireAuth,validateGroup],async (req,res)=>{
     const {name,about,type,city,state,private} = req.body;
 
+
     const newGroup = await Group.create({
         organizerId:req.user.id,
         name,
@@ -58,6 +59,7 @@ router.post('/',[restoreUser,requireAuth,validateGroup],async (req,res)=>{
 
     res.json({
         newGroup
+
     })
 })
 
@@ -231,12 +233,6 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
         attributes:['id']
     })
 
-    if(!group){
-        res.statusCode = 404;
-        return res.json({
-            "message": "Group couldn't be found"
-        })
-    }
 
     if(req.user.id !== group.id){
         res.statusCode = 403;
@@ -244,6 +240,22 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
             "message": "Forbidden"
         })
     }
+
+    if(!group){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Group couldn't be found"
+        })
+    }
+
+    const venue = await Venue.findByPk(req.body.venueId);
+    if(!venue){
+        res.statusCode = 404;
+        return res.json({
+            "message":"Venue couldn't be found"
+        })
+    }
+
 
     const{name,type,capicity,price,description,startDate,endDate} = req.body;
 
@@ -262,7 +274,9 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
 
 
 
-})
+});
+
+
 
 
 
