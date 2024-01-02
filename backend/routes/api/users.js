@@ -24,10 +24,15 @@ const validateSignup = [
       .exists({ checkFalsy: true })
       .isEmail()
       .withMessage('Please provide a valid email.'),
+      // .custom( async (value)=>{
+      //   const existedEmail = await User.findOne({email:value})
+      //   if(existedEmail) throw new Error("User already exists")
+      // }),
     check('username')
       .exists({ checkFalsy: true })
       .isLength({ min: 4 })
       .withMessage('Please provide a username with at least 4 characters.'),
+
     check('username')
       .not()
       .isEmail()
@@ -41,8 +46,27 @@ const validateSignup = [
 
 
 // sign up end point POST /api/users
-router.post('/',validateSignup,async (req,res)=>{
+router.post('/',validateSignup,async (req,res,next)=>{
     const {email,username,password,firstName,lastName} = req.body;
+    const existedEmail = await User.findOne({
+      email
+    })
+
+    const existedUsername = await User.findOne({
+      username
+    })
+    if(existedEmail){
+        const err = new Error('User already exists');
+        err.status = 500;
+        err.errors = {email:'User with that email already exists'};
+        return next(err);
+    }
+    if(existedUsername){
+      const err = new Error('User already exists');
+        err.status = 500;
+        err.errors = {email:'User with that username already exists'};
+        return next(err);
+    }
     const hashedPassword = bcrypt.hashSync(password);
     const user = await User.create({
         firstName,
