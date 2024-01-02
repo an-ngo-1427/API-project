@@ -22,7 +22,7 @@ module.exports = {
     {
       userId:1,
       groupId:1,
-      status:'asdf',
+      status:'active',
     }
    ],{validate:true})
   },
@@ -35,7 +35,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete(options,{
-      status:'asdf'
+      userId:1
     })
   }
 
