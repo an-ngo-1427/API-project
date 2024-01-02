@@ -16,10 +16,10 @@ module.exports = (sequelize, DataTypes) => {
 
       })
 
-      Venue.hasMany(models.Event,{
-        foreignKey:'VenueId',
-        onDelete:"CASCADE",
-        hooks:true
+      Venue.belongsToMany(models.Group,{
+        through:models.Event,
+        foreignKey:'venueId',
+        otherKey:'groupId'
       })
     }
   }

@@ -17,16 +17,16 @@ module.exports = (sequelize, DataTypes) => {
         hooks:true
       })
 
-      User.hasMany(models.Attendance,{
+      User.belongsToMany(models.Event,{
+        through:models.Attendance,
         foreignKey:'userId',
-        onDelete:"CASCADE",
-        hooks:true
+        otherKey:'eventId'
       })
 
-      User.hasMany(models.Membership,{
+      User.belongsToMany(models.Group,{
+        through:models.Membership,
         foreignKey:'userId',
-        onDelete:"CASCADE",
-        hooks:true
+        otherKey:'groupId'
       })
     }
   }
