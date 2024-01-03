@@ -29,6 +29,8 @@ router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>
     venue.state = state
     venue.lat = lat
     venue.lng = lng
+
+    await venue.save();
     res.json({
         venue
     })

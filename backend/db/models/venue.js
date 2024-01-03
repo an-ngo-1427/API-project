@@ -23,9 +23,19 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'venueId',
         otherKey:'groupId'
       })
+
+      Venue.belongsTo(models.Group,{
+        foreignKey:'groupId'
+      })
     }
   }
   Venue.init({
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     groupId: DataTypes.INTEGER,
     address:{
       type:DataTypes.STRING,
