@@ -6,6 +6,44 @@ router = express.Router();
 const {restoreUser,requireAuth} = require('../../utils/auth.js')
 const {handleValidationErrors,validateGroup,validateVenue,validateEvent} = require('../../utils/validation.js')
 
+function getGroups(groups){
+    let groupList=[]
+
+    groups.forEach(group=>{
+        //obtaining user numbers for each group and assign the numbers to the group object property
+        let userNum = group.Users.length
+        //obtaining image urls if preview Image is true
+        let imageUrl;
+        let images = group.GroupImages;
+        if(!images.length){
+            imageUrl = 'no pictures found'
+        }
+        images.forEach(image=>{
+            if(image.preview === true){
+                imageUrl = image.url
+            }else{
+                imageUrl = "no pictures"
+            }
+
+        })
+
+        group = group.toJSON();
+        group.numMembers = userNum;
+        group.previewImage = imageUrl;
+        groupList.push(group)
+
+
+    })
+
+
+    groupList.forEach(async group =>{
+        delete group.Users
+        delete group.GroupImages
+
+    })
+
+     return groupList;
+}
 // getting all groups
 router.get('/',async (req,res)=>{
 
@@ -19,45 +57,34 @@ router.get('/',async (req,res)=>{
             }
         ]
     });
-    let groupList=[]
-
-
-    groups.forEach(group=>{
-        //obtaining user numbers for each group and assign the numbers to the group object property
-        let userNum = group.Users.length
-        //obtaining image urls if preview Image is true
-        let imageUrl;
-        if(group.GroupImages.preview === true){
-            imageUrl = group.GroupImages.url
-        }
-        group = group.toJSON();
-        group.numMembers = userNum;
-        group.previewImage = imageUrl;
-        groupList.push(group)
-
-
-    })
-
-
-    groupList.forEach(async group =>{
-        group.numMembers = group.Users.length
-        delete group.Users
-        delete group.GroupImages
-
-    })
-
-
+   groups = getGroups(groups);
 
 
     res.json({
-        groupList
+        groups
     })
 })
 
 //get groups of the current user
 router.get('/current',[restoreUser,requireAuth],async (req,res)=>{
     const user = req.user
-    const groups = await user.getGroups()
+    let groups = await Group.findAll({
+        include:[
+            {
+                model:User
+            },
+            {
+                model:GroupImage
+            }
+        ],
+        through:{
+            where:{
+                userId:req.user.id
+            }
+        }
+    })
+
+    groups = getGroups(groups)
 
     res.json({
         groups
@@ -67,7 +94,27 @@ router.get('/current',[restoreUser,requireAuth],async (req,res)=>{
 
 //get group details by specific id
 router.get('/:groupId',async (req,res)=>{
-    const group = await Group.findByPk(req.params.groupId);
+    let group = await Group.findByPk(req.params.groupId,{
+        include:[
+            {
+                model:GroupImage
+            },
+            {
+                model:Venue,
+                through:{
+                    attributes:[]
+                }
+            },
+            {
+                model:User
+            }
+        ]
+    });
+    let organizer = await group.getUser()
+    organizer = organizer.toJSON();
+    delete organizer.username;
+    console.log('user',organizer)
+
     if(!group){
         res.statusCode = 404;
         return res.json({
@@ -75,6 +122,11 @@ router.get('/:groupId',async (req,res)=>{
         })
     }
 
+    let userNum = group.Users.length;
+    group = group.toJSON();
+    group.numMembers = userNum;
+    group.organizerId = organizer;
+    delete group.Users
     res.json({
         group
     })
