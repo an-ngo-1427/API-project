@@ -110,17 +110,17 @@ router.get('/:groupId',async (req,res)=>{
             }
         ]
     });
-    let organizer = await group.getUser()
-    organizer = organizer.toJSON();
-    delete organizer.username;
-    console.log('user',organizer)
-
     if(!group){
         res.statusCode = 404;
         return res.json({
             message:"Group couldn't be found"
         })
     }
+    let organizer = await group.getUser()
+    organizer = organizer.toJSON();
+    delete organizer.username;
+    console.log('user',organizer)
+
 
     let userNum = group.Users.length;
     group = group.toJSON();
@@ -255,11 +255,7 @@ router.get('/:groupId/venues',[restoreUser,requireAuth],async(req,res)=>{
         })
     }
 
-    const venues = await Venue.findAll({
-        where:{
-            groupId:req.params.groupId
-        }
-    })
+    const venues = await group.getVenues;
 
     res.json({
         venues
@@ -306,15 +302,10 @@ router.get('/:groupId/events',async (req,res)=>{
             "message": "Group couldn't be found"
         })
     }
-    const events =  await group.getEvents({
-        include:[
-            {
-                model:Group
-            },
-            {
-                model:Venue
-            }
-        ]
+    const events =  await Event.findAll({
+       where:{
+        groupId:group.id
+       }
     });
     res.json({
         events
@@ -323,10 +314,15 @@ router.get('/:groupId/events',async (req,res)=>{
 
 // creating an event for a group by specified ID
 router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
-    const group = await Group.findByPk(req.params.groupId,{
-        attributes:['id']
-    })
 
+    const group = await Group.findByPk(req.params.groupId)
+
+    if(!group){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Group couldn't be found"
+        })
+    }
 
     if(req.user.id !== group.id){
         res.statusCode = 403;
@@ -335,12 +331,6 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
         })
     }
 
-    if(!group){
-        res.statusCode = 404;
-        return res.json({
-            "message": "Group couldn't be found"
-        })
-    }
 
     const venue = await Venue.findByPk(req.body.venueId);
     if(!venue){
@@ -354,6 +344,8 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
     const{name,type,capicity,price,description,startDate,endDate} = req.body;
 
     const newEvent = await Event.create({
+        groupId:parseInt(req.params.groupId),
+        venueId:req.body.venueId,
         name,
         type,
         capicity,
