@@ -1,14 +1,56 @@
 const express = require('express');
-const {Group,User,GroupImage,Venue,Event} = require('../../db/models');
+const {Group,User,GroupImage,Venue,Event,Membership} = require('../../db/models');
 const {check} = require('express-validator')
+const sequelize = require('sequelize')
 router = express.Router();
 const {restoreUser,requireAuth} = require('../../utils/auth.js')
 const {handleValidationErrors,validateGroup,validateVenue,validateEvent} = require('../../utils/validation.js')
+
+// getting all groups
 router.get('/',async (req,res)=>{
-    console.log(Group)
-    const groups = await Group.findAll();
+
+    let groups = await Group.findAll({
+        include:[
+            {
+                model:User
+            },
+            {
+                model:GroupImage
+            }
+        ]
+    });
+    let groupList=[]
+
+
+    groups.forEach(group=>{
+        //obtaining user numbers for each group and assign the numbers to the group object property
+        let userNum = group.Users.length
+        //obtaining image urls if preview Image is true
+        let imageUrl;
+        if(group.GroupImages.preview === true){
+            imageUrl = group.GroupImages.url
+        }
+        group = group.toJSON();
+        group.numMembers = userNum;
+        group.previewImage = imageUrl;
+        groupList.push(group)
+
+
+    })
+
+
+    groupList.forEach(async group =>{
+        group.numMembers = group.Users.length
+        delete group.Users
+        delete group.GroupImages
+
+    })
+
+
+
+
     res.json({
-        groups
+        groupList
     })
 })
 
