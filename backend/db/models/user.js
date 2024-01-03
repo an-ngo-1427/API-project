@@ -28,6 +28,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'userId',
         otherKey:'groupId'
       })
+
+      User.hasMany(models.Group,{
+        foreignKey:'organizerId',
+        onDelete:'CASCADE',
+        hooks:true
+      })
     }
   }
   User.init({
@@ -74,6 +80,13 @@ module.exports = (sequelize, DataTypes) => {
     defaultScope:{
       attributes:{
         exclude:['hashedPassword','updatedAt','email','createdAt']
+      }
+    },
+    scope:{
+      noUsername:{
+        attributes:{
+          exclude:['username']
+        }
       }
     }
   });

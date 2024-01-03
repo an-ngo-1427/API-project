@@ -17,6 +17,10 @@ module.exports = (sequelize, DataTypes) => {
         otherKey:'userId'
       })
 
+      Group.belongsTo(models.User,{
+        foreignKey:'organizerId'
+      })
+
       Group.belongsToMany(models.Venue,{
         through:models.Event,
         foreignKey:'groupId',
@@ -95,7 +99,7 @@ module.exports = (sequelize, DataTypes) => {
       attributes:{
         exclude:['createdAt','updatedAt']
       }
-    }
+    },
   });
   return Group;
 };
