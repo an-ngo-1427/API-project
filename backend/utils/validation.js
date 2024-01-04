@@ -1,4 +1,4 @@
-const {validationResult,check,body} = require('express-validator');
+const {validationResult,check,body,query} = require('express-validator');
 
 
 const handleValidationErrors = (req,res,next)=>{
@@ -110,6 +110,39 @@ const validateEvent=[
     handleValidationErrors
 ];
 
+const validateQuery = [
+    query('page')
+        .isInt({min:1})
+        .withMessage("Page must be greater than or equal to 1"),
+    query('size')
+        .isInt({min:1})
+        .withMessage("Size must be greater than or equal to 1"),
+    query('name')
+        .custom(value=>{
+            let result;
+            if(value.length >=1){
+                result = parseInt(value)
+                console.log(result)
+                if(result){
+                    console.log('entered')
+                    throw new Error("Name must be a string")
+                }
+                return true;
+            }
+        }),
+    query('type')
+        .isIn(['Online','In Person'])
+        .withMessage("Type must be 'Online' or 'In Person'"),
+    query('startDate')
+        .toDate()
+        .custom(value=>{
+            if(!value){
+                throw new Error ("Start date must be a valid datetime")
+            }
+            return true
+        }),
+    handleValidationErrors
+]
 
 
 
@@ -117,5 +150,6 @@ module.exports = {
     handleValidationErrors,
     validateGroup,
     validateVenue,
-    validateEvent
+    validateEvent,
+    validateQuery
 }

@@ -3,10 +3,11 @@ const router = express.Router();
 
 const {Event,Group,Venue,EventImage,User,Attendance,Membership} = require('../../db/models');
 const {restoreUser,requireAuth} = require('../../utils/auth.js');
-const {validateEvent} = require('../../utils/validation.js');
+const {validateEvent,validateQuery} = require('../../utils/validation.js');
 
-router.get('/',async (req,res)=>{
-
+router.get('/',validateQuery,async (req,res)=>{
+    let queryObj={};
+    console.log('query',req.query)
     const events = await Event.findAll({
         include:[
             {

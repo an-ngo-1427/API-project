@@ -86,4 +86,5 @@ const verifyStatus = function(req,res,next){
 
 
 
+
   module.exports = { setTokenCookie, restoreUser, requireAuth ,verifyStatus};
