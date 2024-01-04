@@ -299,4 +299,55 @@ router.post('/:eventId/attendance',[requireAuth],async (req,res)=>{
 
 
 })
+
+// changin attendance status
+router.put('/:eventId/attendance',[requireAuth],async (req,res)=>{
+    const event = await Event.findByPk(req.params.eventId);
+    if(!event){
+        res.statusCode =404;
+        return res.json({
+            "message": "Event couldn't be found"
+        })
+    }
+
+    const user = await User.findByPk(req.body.userId)
+    if(!user){
+        res.statusCode = 404;
+        return res.json({
+            "message": "User couldn't be found"
+        })
+    }
+
+    const group = await Group.findByPk(event.groupId);
+    const coHost = await group.getUsers({
+        through:{
+            where:{
+                userId:req.user.id,
+                status:'co-host'
+            }
+        }
+    })
+    const attendance = await Attendance.findOne({
+        where:{
+            userId:user.id,
+            eventId:req.params.eventId
+        }
+    })
+    if(coHost || req.user.id == group.organizerId){
+        attendance.status = req.params.status;
+        attendance.save();
+
+        return res.json(attendance)
+    }
+
+    res.statusCode = 403;
+    res.json({
+        'message':'Forbidden'
+    })
+})
+
+// //deleting attendance
+// router.delete('/:eventId/attendance/:userId',[requireAuth,isCohost],(req,res)=>{
+
+// })
 module.exports = router

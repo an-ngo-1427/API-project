@@ -1,5 +1,5 @@
-const {validationResult,check,body,query} = require('express-validator');
-
+const {validationResult,check,body,query,custom} = require('express-validator');
+const {Event,Group,Venue,EventImage,User,Attendance,Membership} = require('../db/models');
 
 const handleValidationErrors = (req,res,next)=>{
     const validtationErrors = validationResult(req);
@@ -151,12 +151,31 @@ const validateQuery = [
     handleValidationErrors
 ]
 
+// const isCohost = [
+//         custom(({req})=>{
+//             console.log('entered')
+//             console.log(req)
+//             const coHost = Membership.findOne({
+//                 where:{
+//                     userId:req.user.id,
+//                     status:'co-host'
+//                 }
+//             })
+//             if(coHost){
+//                 req.coHost = coHost
+//                 return true
+//             }
+//             throw new Error('must co-host to make changes')
+//         }),
 
+//         handleValidationErrors
+// ]
 
 module.exports = {
     handleValidationErrors,
     validateGroup,
     validateVenue,
     validateEvent,
-    validateQuery
+    validateQuery,
+    // isCohost
 }
