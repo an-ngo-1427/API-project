@@ -22,7 +22,7 @@ module.exports = {
     {
       userId:1,
       groupId:1,
-      status:'active',
+      status:'member',
     }
    ],{validate:true})
   },

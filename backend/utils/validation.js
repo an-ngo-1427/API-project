@@ -1,5 +1,5 @@
-const {validationResult,check,body} = require('express-validator');
-
+const {validationResult,check,body,query,custom} = require('express-validator');
+const {Event,Group,Venue,EventImage,User,Attendance,Membership} = require('../db/models');
 
 const handleValidationErrors = (req,res,next)=>{
     const validtationErrors = validationResult(req);
@@ -93,7 +93,6 @@ const validateEvent=[
     check('startDate')
         .toDate()
         .custom(value=>{
-            console.log(value)
             if (value.getTime() <= Date.now()){
                 throw new Error('Start date must be in the future')
             }
@@ -109,12 +108,74 @@ const validateEvent=[
             return true
         }),
     handleValidationErrors
+];
+
+const validateQuery = [
+    query('page')
+        .isInt({min:1})
+        .withMessage("Page must be greater than or equal to 1"),
+    query('size')
+        .isInt({min:1})
+        .withMessage("Size must be greater than or equal to 1"),
+    query('name')
+        .custom(value=>{
+            if(!value) return true;
+            if(value.length >=1){
+                result = parseInt(value)
+
+                if(result){
+
+                    throw new Error("Name must be a string")
+                }
+                return true;
+            }
+        }),
+    query('type')
+        .custom(value=>{
+            if(!value)return true;
+
+            if(value !== 'Online' && value !== 'In Person'){
+                throw new Error("Type must be 'Online' or 'In Person'")
+            }
+            return true;
+        }),
+    query('startDate')
+        .custom(value=>{
+            if(!value) return true
+            let date = Date.parse(value)
+            if(!date){
+                throw new Error ("Start date must be a valid datetime")
+            }
+            return true
+        }),
+    handleValidationErrors
 ]
 
+// const isCohost = [
+//         custom(({req})=>{
+//             console.log('entered')
+//             console.log(req)
+//             const coHost = Membership.findOne({
+//                 where:{
+//                     userId:req.user.id,
+//                     status:'co-host'
+//                 }
+//             })
+//             if(coHost){
+//                 req.coHost = coHost
+//                 return true
+//             }
+//             throw new Error('must co-host to make changes')
+//         }),
+
+//         handleValidationErrors
+// ]
 
 module.exports = {
     handleValidationErrors,
     validateGroup,
     validateVenue,
-    validateEvent
+    validateEvent,
+    validateQuery,
+    // isCohost
 }
