@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     groupId: DataTypes.INTEGER,
     address:{
-      type:DataTypes.STRING,
+      type:DataTypes.TEXT,
       // allowNull:false,
       validate:{
         notEmpty:{

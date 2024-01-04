@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     name:{
-      type:DataTypes.STRING,
+      type:DataTypes.TEXT,
       validate:{
         isLongerthan(value){
           if(value.length<5){
@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    description: DataTypes.STRING,
+    description: DataTypes.TEXT,
     type: DataTypes.STRING,
     capacity: DataTypes.INTEGER,
     price: DataTypes.DECIMAL,

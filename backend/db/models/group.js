@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     name:{
-      type: DataTypes.STRING(60),
+      type: DataTypes.TEXT,
       validate:{
         isShort(value){
           if(value.length > 60){
@@ -62,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     about:{
-      type:DataTypes.STRING,
+      type:DataTypes.TEXT,
       validate:{
         isLong(value){
           if (value.length <50){
