@@ -24,7 +24,7 @@ router.delete('/:imageId',async (req,res)=>{
             }
         }
     })
-    console.log(coHost)
+
 
     if(coHost || req.user.id === organizerId){
         await groupImage.destroy()

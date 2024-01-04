@@ -124,7 +124,7 @@ const validateQuery = [
                 result = parseInt(value)
 
                 if(result){
-                    console.log('entered')
+
                     throw new Error("Name must be a string")
                 }
                 return true;
@@ -133,7 +133,7 @@ const validateQuery = [
     query('type')
         .custom(value=>{
             if(!value)return true;
-            console.log(value)
+
             if(value !== 'Online' && value !== 'In Person'){
                 throw new Error("Type must be 'Online' or 'In Person'")
             }

@@ -25,7 +25,7 @@ function getGroups(groups){
                 if(images[i].preview === true){
                     if(images[i].url){
                         imageUrl = images[i].url
-                        console.log(imageUrl)
+
                         break
                     }
 
@@ -125,7 +125,7 @@ router.get('/:groupId',async (req,res)=>{
     let organizer = await group.getUser()
     organizer = organizer.toJSON();
     delete organizer.username;
-    console.log('user',organizer)
+
 
 
     let userNum = group.Users.length;
@@ -554,7 +554,7 @@ router.put('/:groupId/membership',[requireAuth,verifyStatus],async (req,res)=>{
     }
 
     if(organizer.id == req.user.id && status === 'co-host'){
-        console.log('entered')
+
         membership.status = status;
         membership.save()
         return res.json(
@@ -567,7 +567,7 @@ router.put('/:groupId/membership',[requireAuth,verifyStatus],async (req,res)=>{
             }
         )
     }
-    console.log('reached')
+
     res.statusCode=403;
     res.json({
         "message":"Forbidden"
@@ -601,7 +601,7 @@ router.get('/:groupId/members',async (req,res)=>{
             joinTableAttributes:['status']
 
         });
-        console.log(Members);
+
         return res.json({Members})
     }
 
@@ -640,8 +640,7 @@ router.delete('/:groupId/membership/:memberId',[requireAuth],async (req,res)=>{
     })
 
 
-    console.log('id',req.user.id);
-    console.log(req.params.memberId)
+
     if(req.user.id ==  req.params.memberId){
         await membership.destroy();
         return res.json({

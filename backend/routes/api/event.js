@@ -11,7 +11,7 @@ router.get('/',validateQuery,async (req,res)=>{
     let queryObj={where:{}};
     queryObj.limit = size;
     queryObj.offset = size * (page-1);
-    console.log(req.query)
+
     if(name){
         queryObj.where.name = name;
     }
@@ -21,7 +21,7 @@ router.get('/',validateQuery,async (req,res)=>{
     if(startDate){
         queryObj.where.startDate = startDate;
     }
-    console.log(queryObj)
+
     const events = await Event.findAll({
         include:[
             {
@@ -131,7 +131,7 @@ router.get('/:eventId',async (req,res)=>{
 router.post('/:eventId/images',[requireAuth],async (req,res)=>{
 
     const event = await Event.findByPk(req.params.eventId);
-    console.log(event)
+
     if(!event){
         res.statusCode = 404;
         res.json({
@@ -142,7 +142,7 @@ router.post('/:eventId/images',[requireAuth],async (req,res)=>{
 
 
     const{url,preview} = req.body;
-    console.log(url)
+
     let newImage = await EventImage.create({
 
         eventId:req.params.eventId,
@@ -223,8 +223,7 @@ router.delete('/:eventId',[requireAuth],async(req,res)=>{
             "message": "Event couldn't be found"
         })
     }
-    console.log(event)
-    console.log(event.groupId)
+
     const group = await Group.findByPk(event.groupId)
 
     if(req.user.id !== group.organizerId){
@@ -250,7 +249,7 @@ router.post('/:eventId/attendance',[requireAuth],async (req,res)=>{
             userId:req.user.id
         }
     })
-    console.log(membership)
+
     const event = await Event.findByPk(req.params.eventId)
     if(!event){
         res.startCode = 404;
