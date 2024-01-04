@@ -22,7 +22,7 @@ module.exports = {
         onDelete:'SET NULL'
       },
       address: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         // allowNull:false,
 
       },

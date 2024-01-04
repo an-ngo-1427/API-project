@@ -14,10 +14,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING(60)
+        type: Sequelize.TEXT
       },
       about: {
-        type: Sequelize.STRING(50)
+        type: Sequelize.TEXT
       },
       type: {
         type: Sequelize.STRING,
