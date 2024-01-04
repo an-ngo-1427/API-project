@@ -119,10 +119,10 @@ const validateQuery = [
         .withMessage("Size must be greater than or equal to 1"),
     query('name')
         .custom(value=>{
-            let result;
+            if(!value) return true;
             if(value.length >=1){
                 result = parseInt(value)
-                console.log(result)
+
                 if(result){
                     console.log('entered')
                     throw new Error("Name must be a string")
@@ -131,12 +131,19 @@ const validateQuery = [
             }
         }),
     query('type')
-        .isIn(['Online','In Person'])
-        .withMessage("Type must be 'Online' or 'In Person'"),
-    query('startDate')
-        .toDate()
         .custom(value=>{
-            if(!value){
+            if(!value)return true;
+            console.log(value)
+            if(value !== 'Online' && value !== 'In Person'){
+                throw new Error("Type must be 'Online' or 'In Person'")
+            }
+            return true;
+        }),
+    query('startDate')
+        .custom(value=>{
+            if(!value) return true
+            let date = Date.parse(value)
+            if(!date){
                 throw new Error ("Start date must be a valid datetime")
             }
             return true

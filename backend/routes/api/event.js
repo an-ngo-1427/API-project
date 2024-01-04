@@ -6,8 +6,22 @@ const {restoreUser,requireAuth} = require('../../utils/auth.js');
 const {validateEvent,validateQuery} = require('../../utils/validation.js');
 
 router.get('/',validateQuery,async (req,res)=>{
-    let queryObj={};
-    console.log('query',req.query)
+    const {page,size,name,type,startDate} = req.query;
+
+    let queryObj={where:{}};
+    queryObj.limit = size;
+    queryObj.offset = size * (page-1);
+    console.log(req.query)
+    if(name){
+        queryObj.where.name = name;
+    }
+    if(type){
+        queryObj.where.type = type
+    }
+    if(startDate){
+        queryObj.where.startDate = startDate;
+    }
+    console.log(queryObj)
     const events = await Event.findAll({
         include:[
             {
@@ -19,7 +33,8 @@ router.get('/',validateQuery,async (req,res)=>{
             {
                 model:EventImage
             }
-        ]
+        ],
+        ...queryObj
     });
     const groups  = await Group.findAll({
         attributes:['id','name','city','state']
