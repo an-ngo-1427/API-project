@@ -7,7 +7,7 @@ const {handleValidationErrors,validateVenue} = require('../../utils/validation.j
 const {Venue,Group} = require('../../db/models');
 
 router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>{
-    const venue = await Venue.findByPk(req.params.venueId);
+    let venue = await Venue.findByPk(req.params.venueId);
     if(!venue){
         res.statusCode = 404;
         return res.json({
@@ -31,8 +31,10 @@ router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>
     venue.lng = lng
 
     await venue.save();
+
+    venue = venue.toJSON()
     res.json({
-        venue
+        ...venue
     })
 })
 
