@@ -15,17 +15,23 @@ function getGroups(groups){
         //obtaining image urls if preview Image is true
         let imageUrl;
         let images = group.GroupImages;
+
         if(!images.length){
             imageUrl = 'no pictures found'
-        }
-        images.forEach(image=>{
-            if(image.preview === true){
-                imageUrl = image.url
-            }else{
-                imageUrl = "no pictures"
-            }
+        }else{
+            for (let i=0;i<images.length;i++){
+                if(images[i].preview === true){
+                    if(images[i].url){
+                        imageUrl = images[i].url
+                        console.log(imageUrl)
+                        break
+                    }
 
-        })
+                }else{
+                    imageUrl = 'no preview'
+                }
+            }
+        }
 
         group = group.toJSON();
         group.numMembers = userNum;
@@ -101,9 +107,9 @@ router.get('/:groupId',async (req,res)=>{
             },
             {
                 model:Venue,
-                through:{
-                    attributes:[]
-                }
+                // through:{
+                //     attributes:[]
+                // }
             },
             {
                 model:User
@@ -125,10 +131,10 @@ router.get('/:groupId',async (req,res)=>{
     let userNum = group.Users.length;
     group = group.toJSON();
     group.numMembers = userNum;
-    group.organizerId = organizer;
+    group.organizer = organizer;
     delete group.Users
     res.json({
-        group
+        ...group
     })
 })
 
@@ -141,7 +147,7 @@ router.post('/',[restoreUser,requireAuth,validateGroup],async (req,res)=>{
     const {name,about,type,city,state,private} = req.body;
 
 
-    const newGroup = await Group.create({
+    let newGroup = await Group.create({
         organizerId:req.user.id,
         name,
         about,
@@ -151,8 +157,9 @@ router.post('/',[restoreUser,requireAuth,validateGroup],async (req,res)=>{
         state
     })
 
+    newGroup = newGroup.toJSON()
     res.json({
-        newGroup
+        ...newGroup
 
     })
 })
@@ -176,13 +183,16 @@ router.post('/:groupId/images',[restoreUser,requireAuth],async (req,res)=>{
             "message": "Forbidden"
         })
     }
-    const {imgUrl,preview} = req.body
-    const newImage = await GroupImage.create({
-        groupId:req.params.groupId,
-        url:imgUrl,
+    const {url,preview} = req.body
+    let newImage = await GroupImage.create({
+        groupId:parseInt(req.params.groupId),
+        url,
         preview
     })
-
+    newImage = newImage.toJSON()
+    delete newImage.updatedAt;
+    delete newImage.createdAt;
+    delete newImage.groupId
     res.json({
         newImage
     })
@@ -190,7 +200,7 @@ router.post('/:groupId/images',[restoreUser,requireAuth],async (req,res)=>{
 
 // editting group
 router.put('/:groupId',[restoreUser,requireAuth,validateGroup],async(req,res)=>{
-    const group = await Group.findByPk(req.params.groupId)
+    let group = await Group.findByPk(req.params.groupId)
     if(!group){
         res.statusCode = 404
         return res.json({
@@ -212,8 +222,11 @@ router.put('/:groupId',[restoreUser,requireAuth,validateGroup],async(req,res)=>{
     group.city = city
     group.state = state
 
+    group.save()
+
+    group = group.toJSON()
     res.json({
-        group
+        ...group
     })
 })
 
@@ -255,10 +268,14 @@ router.get('/:groupId/venues',[restoreUser,requireAuth],async(req,res)=>{
         })
     }
 
-    const venues = await group.getVenues;
+    const Venues = await Venue.findAll({
+        where:{
+            groupId:req.params.groupId
+        }
+    });
 
     res.json({
-        venues
+        Venues
     })
 })
 
@@ -278,8 +295,8 @@ router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (re
         })
     }
     const{address,city,state,lat,lng} = req.body
-    const newVenue = await Venue.create({
-        groupId:req.params.groupId,
+    const Venues = await Venue.create({
+        groupId:parseInt(req.params.groupId),
         address,
         city,
         state,
@@ -288,27 +305,52 @@ router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (re
     })
 
     res.json({
-        newVenue
+        Venues
     })
 })
 
 // getting all events of a group by specified id
 router.get('/:groupId/events',async (req,res)=>{
-    const group = await Group.findByPk(req.params.groupId);
-
+    const group = await Group.findByPk(req.params.groupId,{
+        attributes:['id','name','city','state']
+    });
     if(!group){
         res.statudCode=404;
         return res.json({
             "message": "Group couldn't be found"
         })
     }
-    const events =  await Event.findAll({
-       where:{
-        groupId:group.id
-       }
+
+    let Events=[]
+    let allEvents =  await Event.findAll({
+        attributes:{
+            exclude:['groupId']
+        },
+        where:{
+            groupId:group.id
+        }
+
     });
+
+
+    const Venues = await Venue.findAll({
+        attributes:['id','city','state']
+    });
+    allEvents.forEach(event=>{
+        event = event.toJSON()
+        if(!event.venueId) event.Venue = null
+        Venues.forEach(venue=>{
+            if(venue.id === event.venueId){
+                event.Venue = venue;
+            }
+        })
+        event.Group = group
+        delete event.venueId;
+        Events.push(event)
+    })
+
     res.json({
-        events
+        Events
     })
 })
 
@@ -341,22 +383,26 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
     }
 
 
-    const{name,type,capicity,price,description,startDate,endDate} = req.body;
-
-    const newEvent = await Event.create({
+    let{name,type,capacity,price,description,startDate,endDate} = req.body;
+    capacity = parseInt(capacity);
+    price = parseInt(price)
+    let newEvent = await Event.create({
         groupId:parseInt(req.params.groupId),
         venueId:req.body.venueId,
         name,
         type,
-        capicity,
+        capacity,
         price,
         description,
         startDate,
         endDate
     })
-    res.json({
-        newEvent
-    })
+    newEvent = newEvent.toJSON();
+    delete newEvent.updatedAt;
+    delete newEvent.createdAt;
+
+
+    res.json(newEvent)
 
 
 

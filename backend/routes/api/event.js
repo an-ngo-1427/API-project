@@ -70,10 +70,10 @@ router.get('/',async (req,res)=>{
 
     })
 
-    res.json({
-        Events,
+    res.json(
+        {Events}
 
-    })
+    )
 })
 
 //get details of an event specified by its ID
@@ -127,20 +127,24 @@ router.post('/:eventId/images',[requireAuth],async (req,res)=>{
 
     const{url,preview} = req.body;
     console.log(url)
-    const newImage = await EventImage.create({
+    let newImage = await EventImage.create({
 
         eventId:req.params.eventId,
         url,
         preview
     })
 
+    newImage = newImage.toJSON();
+    delete newImage.updatedAt;
+    delete newImage.createdAt;
+    delete newImage.eventId;
     res.json(newImage)
 
 })
 
 //editting an event by event ID
 router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
-    const event = await Event.findByPk(req.params.eventId);
+    let event = await Event.findByPk(req.params.eventId);
     let {venueId} = req.body;
     if(!event){
         res.statusCode = 404;
@@ -168,18 +172,18 @@ router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
 
     const {name,type,capacity,price,description,startDate,endDate} = req.body;
 
-    event.venueId = venueId;
+    event.venueId = parseInt(venueId);
     event.name = name;
     event.type = type;
-    event.capacity = capacity;
-    event.price = price;
+    event.capacity = parseInt(capacity);
+    event.price = parseFloat(price);
     event.description = description;
     event.startDate = startDate;
     event.endDate = endDate;
 
     await event.save()
 
-
+    delete event.updatedAt;
     res.json(event)
 })
 
