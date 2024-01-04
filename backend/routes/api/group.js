@@ -193,9 +193,9 @@ router.post('/:groupId/images',[restoreUser,requireAuth],async (req,res)=>{
     delete newImage.updatedAt;
     delete newImage.createdAt;
     delete newImage.groupId
-    res.json({
+    res.json(
         newImage
-    })
+    )
 })
 
 // editting group
