@@ -93,7 +93,6 @@ const validateEvent=[
     check('startDate')
         .toDate()
         .custom(value=>{
-            console.log(value)
             if (value.getTime() <= Date.now()){
                 throw new Error('Start date must be in the future')
             }
@@ -109,7 +108,9 @@ const validateEvent=[
             return true
         }),
     handleValidationErrors
-]
+];
+
+
 
 
 module.exports = {

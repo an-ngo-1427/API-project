@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {Event,Group,Venue,EventImage,User} = require('../../db/models');
+const {Event,Group,Venue,EventImage,User,Attendance,Membership} = require('../../db/models');
 const {restoreUser,requireAuth} = require('../../utils/auth.js');
 const {validateEvent} = require('../../utils/validation.js');
 
@@ -152,6 +152,17 @@ router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
             "message": "Event couldn't be found"
         })
     }
+    const group = await Group.findByPk(event.groupId)
+
+    let coHost = await group.getUsers({
+        through:{
+            where:{
+                userId:req.user.id,
+                status:'co-host'
+            }
+        }
+    })
+
     const venue = await Venue.findByPk(venueId);
     if(!venue){
         res.statusCode = 404
@@ -161,30 +172,30 @@ router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
 
     }
 
-    const group = await Group.findByPk(event.groupId)
 
-    if(req.user.id !== group.organizerId){
-        res.statusCode = 403
-        return res.json({
-            "message": "Forbidden"
-        })
+    if(coHost || req.user.id == group.organizerId){
+        const {name,type,capacity,price,description,startDate,endDate} = req.body;
+
+        event.venueId = parseInt(venueId);
+        event.name = name;
+        event.type = type;
+        event.capacity = parseInt(capacity);
+        event.price = parseFloat(price);
+        event.description = description;
+        event.startDate = startDate;
+        event.endDate = endDate;
+
+        await event.save()
+
+        delete event.updatedAt;
+        res.json(event)
+
     }
+    res.statusCode = 403
+    return res.json({
+        "message": "Forbidden"
+    })
 
-    const {name,type,capacity,price,description,startDate,endDate} = req.body;
-
-    event.venueId = parseInt(venueId);
-    event.name = name;
-    event.type = type;
-    event.capacity = parseInt(capacity);
-    event.price = parseFloat(price);
-    event.description = description;
-    event.startDate = startDate;
-    event.endDate = endDate;
-
-    await event.save()
-
-    delete event.updatedAt;
-    res.json(event)
 })
 
 router.delete('/:eventId',[requireAuth],async(req,res)=>{
@@ -215,4 +226,61 @@ router.delete('/:eventId',[requireAuth],async(req,res)=>{
     )
 })
 
+// requesting attendance to en event
+router.post('/:eventId/attendance',[requireAuth],async (req,res)=>{
+
+    const membership = await Membership.findOne({
+        where:{
+            userId:req.user.id
+        }
+    })
+    console.log(membership)
+    const event = await Event.findByPk(req.params.eventId)
+    if(!event){
+        res.startCode = 404;
+        return res.json({
+            "message": "Event couldn't be found"
+        })
+    }
+    if(membership.groupId !== event.groupId){
+        res.statusCode = 403;
+        return res.json({
+            "message":"Forbidden"
+        })
+    }
+
+    const attendance = await Attendance.findOne({
+        where:{
+            eventId:event.id,
+            userId:req.user.id
+        }
+    })
+    if(!attendance){
+        let attendance = await Attendance.create({
+            userId:req.user.id,
+            eventId:req.params.eventId,
+            status:"pending"
+        })
+        return res.json({
+            userId:req.user.id,
+            status:attendance.status
+        })
+    }
+    if(attendance.status === 'attending'){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Attendance has already been requested"
+        })
+    }
+
+    if(attendance.status === 'waitlist' || attendance.status === 'pending'){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Attendance has already been requested"
+        })
+    }
+
+
+
+})
 module.exports = router

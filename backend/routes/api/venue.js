@@ -8,6 +8,22 @@ const {Venue,Group} = require('../../db/models');
 
 router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>{
     let venue = await Venue.findByPk(req.params.venueId);
+    const group = await Group.findByPk(venue.groupId);
+
+    if(!group){
+        res.statusCode= 404;
+        return res.json({
+            "message": "Group couldn't be found"
+        })
+    }
+    let coHost = await group.getUsers({
+        through:{
+            where:{
+                userId:req.user.id,
+                status:'co-host'
+            }
+        }
+    })
     if(!venue){
         res.statusCode = 404;
         return res.json({
@@ -15,27 +31,27 @@ router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>
         })
     }
 
-    const group = await Group.findByPk(venue.groupId);
-    if(req.user.id !== group.organizerId){
-        res.statusCode = 403
+    if(coHost || req.user.id === group.organizerId){
+        const{address,city,state,lat,lng} = req.body;
+        venue.address = address
+        venue.city = city
+        venue.state = state
+        venue.lat = lat
+        venue.lng = lng
+
+        await venue.save();
+
+        venue = venue.toJSON()
+        res.json({
+            ...venue
+        })
+
+    }
+    res.statusCode = 403
         return res.json({
             "message": "Forbidden"
         })
-    }
 
-    const{address,city,state,lat,lng} = req.body;
-    venue.address = address
-    venue.city = city
-    venue.state = state
-    venue.lat = lat
-    venue.lng = lng
-
-    await venue.save();
-
-    venue = venue.toJSON()
-    res.json({
-        ...venue
-    })
 })
 
 module.exports = router
