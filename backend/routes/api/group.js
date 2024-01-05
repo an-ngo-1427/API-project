@@ -269,7 +269,7 @@ router.get('/:groupId/venues',[restoreUser,requireAuth],async(req,res)=>{
             }
         }
     })
-    if(coHost || req.user.id === group.organizerId){
+    if(coHost[0] || req.user.id === group.organizerId){
         const Venues = await Venue.findAll({
             where:{
                 groupId:req.params.groupId
@@ -306,7 +306,7 @@ router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (re
             "message": "Group couldn't be found"
         })
     }
-    if(coHost || req.user.id === group.organizerId){
+    if(coHost[0] || req.user.id === group.organizerId){
         const{address,city,state,lat,lng} = req.body
         let Venues = await Venue.create({
             groupId:parseInt(req.params.groupId),
@@ -377,14 +377,6 @@ router.get('/:groupId/events',async (req,res)=>{
 router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
 
     const group = await Group.findByPk(req.params.groupId)
-    const coHost = await group.getUsers({
-        through:{
-            where:{
-                userId:req.user.id,
-                status:'co-host'
-            }
-        }
-    })
 
 
     if(!group){
@@ -395,6 +387,14 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
     }
 
 
+    const coHost = await group.getUsers({
+        through:{
+            where:{
+                userId:req.user.id,
+                status:'co-host'
+            }
+        }
+    })
 
 
     const venue = await Venue.findByPk(req.body.venueId);
@@ -405,10 +405,13 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
         })
     }
 
-    if(req.user.id === req.user.id || coHost){
+
+    if(req.user.id === group.organizerId || coHost[0]){
+
         let{name,type,capacity,price,description,startDate,endDate} = req.body;
         capacity = parseInt(capacity);
-        price = parseInt(price)
+        price = parseInt(price);
+
         let newEvent = await Event.create({
             groupId:parseInt(req.params.groupId),
             venueId:parseInt(req.body.venueId),
@@ -425,7 +428,7 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
         delete newEvent.createdAt;
 
 
-        res.json(newEvent)
+        return res.json(newEvent)
 
     }
 
@@ -639,7 +642,12 @@ router.delete('/:groupId/membership/:memberId',[requireAuth],async (req,res)=>{
         }
     })
 
-
+    if(!reqUserStatus){
+        res.statusCode = 403;
+        res.json({
+            'message':'Forbidden'
+        })
+    }
 
     if(req.user.id ==  req.params.memberId){
         await membership.destroy();
@@ -648,7 +656,7 @@ router.delete('/:groupId/membership/:memberId',[requireAuth],async (req,res)=>{
         })
     }
 
-    if(reqUserStatus.status !== "co-host" || organizer.id !== req.user.id){
+    if((reqUserStatus.status !== "co-host") || (organizer.id !== req.user.id)){
         res.statusCode = 403;
         return res.json({
             "message":"Forbidden"

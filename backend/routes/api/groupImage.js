@@ -5,8 +5,8 @@ const {GroupImage,Membership,Group} = require('../../db/models');
 
 router.delete('/:imageId',async (req,res)=>{
     const groupImage = await GroupImage.findByPk(req.params.imageId,{
-        attributes:['groupId']
     });
+
     if(!groupImage){
         res.statusCode = 404;
         return res.json({
@@ -26,9 +26,10 @@ router.delete('/:imageId',async (req,res)=>{
     })
 
 
-    if(coHost || req.user.id === organizerId){
+
+    if(coHost[0] || req.user.id === organizerId){
         await groupImage.destroy()
-        res.json({
+        return res.json({
             "message": "Successfully deleted"
         })
 
