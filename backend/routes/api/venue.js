@@ -8,7 +8,13 @@ const {Venue,Group} = require('../../db/models');
 
 router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>{
     let venue = await Venue.findByPk(req.params.venueId);
-    console.log(venue)
+
+    if(!venue){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Venue couldn't be found"
+        })
+    }
     const group = await Group.findByPk(venue.groupId);
 
     if(!group){
@@ -25,12 +31,6 @@ router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>
             }
         }
     })
-    if(!venue){
-        res.statusCode = 404;
-        return res.json({
-            "message": "Venue couldn't be found"
-        })
-    }
 
     if(coHost[0] || req.user.id === group.organizerId){
         const{address,city,state,lat,lng} = req.body;
@@ -42,7 +42,8 @@ router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>
 
         await venue.save();
 
-        venue = venue.toJSON()
+        venue = venue.toJSON();
+        delete venue.updatedAt;
         return res.json({
             ...venue
         })
