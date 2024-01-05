@@ -17,17 +17,23 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   GroupImage.init({
+    id: {
+      allowNull: false,
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER
+    },
     groupId: DataTypes.INTEGER,
     url: DataTypes.TEXT,
     preview: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'GroupImage',
-    defaultScope:{
-      attributes:{
-        exclude:['updatedAt','createdAt','groupId']
-      }
-    }
+    // defaultScope:{
+    //   attributes:{
+    //     exclude:['updatedAt','createdAt','groupId']
+    //   }
+    // }
   });
   return GroupImage;
 };

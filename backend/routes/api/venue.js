@@ -8,6 +8,7 @@ const {Venue,Group} = require('../../db/models');
 
 router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>{
     let venue = await Venue.findByPk(req.params.venueId);
+    console.log(venue)
     const group = await Group.findByPk(venue.groupId);
 
     if(!group){
@@ -31,7 +32,7 @@ router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>
         })
     }
 
-    if(coHost || req.user.id === group.organizerId){
+    if(coHost[0] || req.user.id === group.organizerId){
         const{address,city,state,lat,lng} = req.body;
         venue.address = address
         venue.city = city
@@ -42,7 +43,7 @@ router.put('/:venueId',[restoreUser,requireAuth,validateVenue],async (req,res)=>
         await venue.save();
 
         venue = venue.toJSON()
-        res.json({
+        return res.json({
             ...venue
         })
 

@@ -73,9 +73,9 @@ const requireAuth = function (req, _res, next) {
 const verifyStatus = function(req,res,next){
   const {status} = req.body;
   if(status === 'pending'){
-    const err = new Error("Cannot change a membership status to pending");
+    const err = new Error("Cannot change status to pending");
     err.title = 'Invalid Status';
-    err.errors = {message:"Cannot change a membership status to pending"};
+    err.errors = {message:"Cannot change status to pending"};
     err.status = 400;
     return next(err)
   }

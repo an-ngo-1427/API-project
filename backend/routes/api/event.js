@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const {Event,Group,Venue,EventImage,User,Attendance,Membership} = require('../../db/models');
-const {restoreUser,requireAuth} = require('../../utils/auth.js');
+const {restoreUser,requireAuth,verifyStatus} = require('../../utils/auth.js');
 const {validateEvent,validateQuery} = require('../../utils/validation.js');
-
+const {Op} = require('sequelize')
 router.get('/',validateQuery,async (req,res)=>{
     const {page,size,name,type,startDate} = req.query;
 
@@ -139,22 +139,49 @@ router.post('/:eventId/images',[requireAuth],async (req,res)=>{
         })
     }
 
+    const group = await Group.findByPk(event.groupId)
 
-
-    const{url,preview} = req.body;
-
-    let newImage = await EventImage.create({
-
-        eventId:req.params.eventId,
-        url,
-        preview
+    const attendee = await Attendance.findOne({
+        where:{
+            eventId:event.id,
+            userId:req.user.id,
+            status:'attending'
+        }
     })
 
-    newImage = newImage.toJSON();
-    delete newImage.updatedAt;
-    delete newImage.createdAt;
-    delete newImage.eventId;
-    res.json(newImage)
+    const coHost = await group.getUsers({
+        through:{
+            where:{
+                userId:req.user.id,
+                status:'co-host'
+            }
+        }
+    })
+    console.log(req.user.id);
+    console.log(group.organizerId);
+    console.log(attendee)
+    if(attendee || coHost[0] || req.user.id === group.organizerId){
+        const{url,preview} = req.body;
+
+        let newImage = await EventImage.create({
+
+            eventId:req.params.eventId,
+            url,
+            preview
+        })
+
+        newImage = newImage.toJSON();
+        delete newImage.updatedAt;
+        delete newImage.createdAt;
+        delete newImage.eventId;
+        return res.json(newImage)
+
+    }
+
+    res.startCode = 403;
+    res.json({
+        'message':'Forbidden'
+    })
 
 })
 
@@ -188,8 +215,8 @@ router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
 
     }
 
-
-    if(coHost || req.user.id == group.organizerId){
+    console.log(req.user.id)
+    if(coHost[0] || req.user.id == group.organizerId){
         const {name,type,capacity,price,description,startDate,endDate} = req.body;
 
         event.venueId = parseInt(venueId);
@@ -213,10 +240,9 @@ router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
     })
 
 })
-
+// deleteing events
 router.delete('/:eventId',[requireAuth],async(req,res)=>{
     const event = await Event.findByPk(req.params.eventId);
-
     if(!event){
         res.statusCode = 404;
         return res.json({
@@ -225,36 +251,61 @@ router.delete('/:eventId',[requireAuth],async(req,res)=>{
     }
 
     const group = await Group.findByPk(event.groupId)
+    const coHost = await group.getUsers({
+        through:{
+            where:{
+                userId: req.user.id,
+                status:'co-host'
+            }
+        }
+    })
+    if(coHost[0] || req.user.id === group.organizerId){
+        await event.destroy();
+        return res.json(
+            {
+                "message": "Successfully deleted"
+              }
+        )
 
-    if(req.user.id !== group.organizerId){
+    }
+
         res.statusCode = 403
         return res.json({
             "message": "Forbidden"
         })
-    }
 
-    await event.destroy();
-    res.json(
-        {
-            "message": "Successfully deleted"
-          }
-    )
+
 })
 
 // requesting attendance to en event
 router.post('/:eventId/attendance',[requireAuth],async (req,res)=>{
 
+    const event = await Event.findByPk(req.params.eventId)
+    if(!event){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Event couldn't be found"
+        })
+    }
+
+
     const membership = await Membership.findOne({
         where:{
-            userId:req.user.id
+            userId:req.user.id,
+            groupId:event.groupId
         }
     })
 
-    const event = await Event.findByPk(req.params.eventId)
-    if(!event){
-        res.startCode = 404;
+    if(!membership){
+        res.statusCode = 404;
         return res.json({
-            "message": "Event couldn't be found"
+            'message':'Forbidden'
+        })
+    }
+    if(membership.status === 'pending'){
+        res.statusCode = 403;
+        return res.json({
+            'message':'Forbidden'
         })
     }
     if(membership.groupId !== event.groupId){
@@ -281,10 +332,11 @@ router.post('/:eventId/attendance',[requireAuth],async (req,res)=>{
             status:attendance.status
         })
     }
+    console.log(attendance)
     if(attendance.status === 'attending'){
         res.statusCode = 404;
         return res.json({
-            "message": "Attendance has already been requested"
+            "message": "User is already an attendee of the event"
         })
     }
 
@@ -300,7 +352,7 @@ router.post('/:eventId/attendance',[requireAuth],async (req,res)=>{
 })
 
 // changin attendance status
-router.put('/:eventId/attendance',[requireAuth],async (req,res)=>{
+router.put('/:eventId/attendance',[requireAuth,verifyStatus],async (req,res)=>{
     const event = await Event.findByPk(req.params.eventId);
     if(!event){
         res.statusCode =404;
@@ -317,6 +369,7 @@ router.put('/:eventId/attendance',[requireAuth],async (req,res)=>{
         })
     }
 
+
     const group = await Group.findByPk(event.groupId);
     const coHost = await group.getUsers({
         through:{
@@ -332,10 +385,18 @@ router.put('/:eventId/attendance',[requireAuth],async (req,res)=>{
             eventId:req.params.eventId
         }
     })
-    if(coHost || req.user.id == group.organizerId){
-        attendance.status = req.params.status;
-        attendance.save();
 
+    if(!attendance){
+        res.statusCode = 404;
+        res.json({
+            "message": "Attendance between the user and the event does not exist"
+        })
+    }
+
+    if(coHost[0] || req.user.id == group.organizerId){
+        attendance.status = req.body.status;
+        attendance.save();
+        console.log(attendance)
         return res.json(attendance)
     }
 
@@ -345,8 +406,103 @@ router.put('/:eventId/attendance',[requireAuth],async (req,res)=>{
     })
 })
 
-// //deleting attendance
-// router.delete('/:eventId/attendance/:userId',[requireAuth,isCohost],(req,res)=>{
+//deleting attendance
+router.delete('/:eventId/attendance/:userId',[requireAuth],async (req,res)=>{
+    const event = await Event.findByPk(req.params.eventId,{
+        include:User
+    });
+    if(!event){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Event couldn't be found"
+        })
+    }
 
-// })
+    const group = await Group.findByPk(event.groupId)
+    const coHost = await Membership.findOne({
+        where:{
+            userId:req.user.id,
+            status:'co-host'
+        }
+    })
+
+    let user = await User.findByPk(req.params.userId);
+    if(!user){
+        res.statusCode = 404;
+        return res.json({
+            "message": "User couldn't be found"
+        })
+    }
+
+    const attendance = await Attendance.findOne({
+        where:{
+            userId:req.params.userId
+        }
+    })
+
+    if(!attendance){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Attendance does not exist for this User"
+        })
+    }
+
+    if(coHost || req.user.id === group.organizerId || req.userId === attendance.userId){
+        await attendance.destroy();
+        res.json({
+            "message": "Successfully deleted attendance from event"
+        })
+    }
+
+    res.statusCode = 403;
+    res.json({
+        'message':'Forbidden'
+    })
+
+
+
+
+})
+// getting all the attendees of an event by specified ID
+router.get('/:eventId/attendees',async (req,res)=>{
+    const event = await Event.findByPk(req.params.eventId,{
+    })
+    if(!event){
+        res.statusCode = 404;
+        res.json({
+            "message": "Event couldn't be found"
+        })
+    }
+
+    const group = await Group.findByPk(event.groupId)
+
+    const coHost = await group.getUsers({
+        through:{
+            where:{
+                userId:req.user.id,
+                status:'co-host'
+            }
+        }
+    })
+
+    let queryObj = {where:{}};
+
+    if(coHost[0] || req.user.id === group.organizerId){
+        queryObj.where.status = { [Op.in]:['attending','waitlist','pending']}
+    }else{
+        queryObj.where.status = {[Op.in]:['attending','waitlist']}
+    }
+
+    const Attendees = await event.getUsers({
+        through:{
+            ...queryObj,
+        },
+        joinTableAttributes:['status'],
+        attributes:{
+            exclude:['username']
+        }
+    })
+
+    res.json({Attendees})
+})
 module.exports = router
