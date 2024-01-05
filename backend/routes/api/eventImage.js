@@ -9,7 +9,7 @@ router.delete('/:imageId',async (req,res)=>{
     });
     if(!eventImage){
         res.statusCode = 404;
-        res.json({
+        return res.json({
             "message": "Event Image couldn't be found"
         })
     }

@@ -134,7 +134,7 @@ router.post('/:eventId/images',[requireAuth],async (req,res)=>{
 
     if(!event){
         res.statusCode = 404;
-        res.json({
+        return res.json({
             "message": "Event couldn't be found"
         })
     }
@@ -209,13 +209,13 @@ router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
     const venue = await Venue.findByPk(venueId);
     if(!venue){
         res.statusCode = 404
-       res.json({
+        return res.json({
            "message": "Venue couldn't be found"
        })
 
     }
 
-    console.log(req.user.id)
+
     if(coHost[0] || req.user.id == group.organizerId){
         const {name,type,capacity,price,description,startDate,endDate} = req.body;
 
@@ -231,7 +231,7 @@ router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
         await event.save()
 
         delete event.updatedAt;
-        res.json(event)
+        return res.json(event)
 
     }
     res.statusCode = 403
@@ -388,7 +388,7 @@ router.put('/:eventId/attendance',[requireAuth,verifyStatus],async (req,res)=>{
 
     if(!attendance){
         res.statusCode = 404;
-        res.json({
+        return res.json({
             "message": "Attendance between the user and the event does not exist"
         })
     }
@@ -449,7 +449,7 @@ router.delete('/:eventId/attendance/:userId',[requireAuth],async (req,res)=>{
 
     if(coHost || req.user.id === group.organizerId || req.userId === attendance.userId){
         await attendance.destroy();
-        res.json({
+        return res.json({
             "message": "Successfully deleted attendance from event"
         })
     }
@@ -469,7 +469,7 @@ router.get('/:eventId/attendees',async (req,res)=>{
     })
     if(!event){
         res.statusCode = 404;
-        res.json({
+        return res.json({
             "message": "Event couldn't be found"
         })
     }

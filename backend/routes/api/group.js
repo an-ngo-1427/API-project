@@ -276,7 +276,7 @@ router.get('/:groupId/venues',[restoreUser,requireAuth],async(req,res)=>{
             }
         });
 
-        res.json({
+        return res.json({
             Venues
         })
 
@@ -644,7 +644,7 @@ router.delete('/:groupId/membership/:memberId',[requireAuth],async (req,res)=>{
 
     if(!reqUserStatus){
         res.statusCode = 403;
-        res.json({
+        return res.json({
             'message':'Forbidden'
         })
     }
