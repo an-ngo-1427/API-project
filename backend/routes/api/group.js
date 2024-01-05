@@ -276,7 +276,7 @@ router.get('/:groupId/venues',[restoreUser,requireAuth],async(req,res)=>{
             }
         });
 
-        res.json({
+        return res.json({
             Venues
         })
 
@@ -291,6 +291,12 @@ router.get('/:groupId/venues',[restoreUser,requireAuth],async(req,res)=>{
 //creating a new venue for a specified group Id
 router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (req,res)=>{
     const group = await Group.findByPk(req.params.groupId)
+    if(!group){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Group couldn't be found"
+        })
+    }
     const coHost = await group.getUsers({
         through:{
             where:{
@@ -300,12 +306,6 @@ router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (re
         }
     })
 
-    if(!group){
-        res.statusCode = 404;
-        return res.json({
-            "message": "Group couldn't be found"
-        })
-    }
     if(coHost[0] || req.user.id === group.organizerId){
         const{address,city,state,lat,lng} = req.body
         let Venues = await Venue.create({
@@ -334,7 +334,7 @@ router.get('/:groupId/events',async (req,res)=>{
         attributes:['id','name','city','state']
     });
     if(!group){
-        res.statudCode=404;
+        res.statusCode=404;
         return res.json({
             "message": "Group couldn't be found"
         })
@@ -628,13 +628,32 @@ router.get('/:groupId/members',async (req,res)=>{
 
 // deleting a user from group
 router.delete('/:groupId/membership/:memberId',[requireAuth],async (req,res)=>{
+    const user = await User.findByPk(req.params.memberId)
+    if(!user){
+        res.statusCode = 404;
+        return res.json({
+            "message": "User couldn't be found"
+        })
+    }
+    const group = await Group.findByPk(req.params.groupId);
+    if(!group){
+        res.statusCode = 404;
+        res.json({
+            'message':"Group couldn't be found"
+        })
+    }
     const membership = await Membership.findOne({
         where:{
             userId:req.params.memberId
         }
     })
 
-    const group = await Group.findByPk(req.params.groupId);
+    if(!membership){
+        res.statusCode = 404;
+        return res.json({
+            "message": "Membership does not exist for this User"
+        })
+    }
     const organizer = await group.getUser()
     const reqUserStatus = await Membership.findOne({
         where:{
@@ -644,7 +663,7 @@ router.delete('/:groupId/membership/:memberId',[requireAuth],async (req,res)=>{
 
     if(!reqUserStatus){
         res.statusCode = 403;
-        res.json({
+        return res.json({
             'message':'Forbidden'
         })
     }
@@ -669,20 +688,7 @@ router.delete('/:groupId/membership/:memberId',[requireAuth],async (req,res)=>{
         })
     }
 
-    const user = await User.findByPk(req.params.memberId)
-    if(!user){
-        res.statusCode = 404;
-        return res.json({
-            "message": "User couldn't be found"
-        })
-    }
 
-    if(!membership){
-        res.statusCode = 404;
-        return res.json({
-            "message": "Membership does not exist for this User"
-        })
-    }
 
     await membership.destroy();
     res.json({

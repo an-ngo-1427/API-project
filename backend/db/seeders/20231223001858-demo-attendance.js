@@ -19,8 +19,13 @@ module.exports = {
    await Attendance.bulkCreate([
     {
       eventId:1,
+      userId:3,
+      status:'attending'
+    },
+    {
+      eventId:2,
       userId:1,
-      status:'asdfasdf'
+      status:'pending'
     }
    ],{validate:true})
   },
@@ -33,8 +38,9 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
       options.tableName = "Attendances"
+      const Op = Sequelize.Op
     await queryInterface.bulkDelete(options,{
-      status:'asdfasdf'
+      userId:{[Op.in]:[3,1]}
     })
   }
 };

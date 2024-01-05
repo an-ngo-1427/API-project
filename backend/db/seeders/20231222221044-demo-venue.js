@@ -24,6 +24,22 @@ module.exports = {
         lat: 40,
         lng: -40,
         groupId:1
+      },
+      {
+        address:"123 Trench street",
+        city:'The Ocean',
+        state:"Pacific Ocean",
+        lat: 83,
+        lng: -40,
+        groupId:2
+      },
+      {
+        address:"746 Great Barrier Reef",
+        city:'The Ocean',
+        state:"Pacific Ocean",
+        lat: 50,
+        lng: -70,
+        groupId:2
       }
     ],{validate:true})
   },
@@ -35,9 +51,10 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const Op = Sequelize.Op
     options.tableName = "Venues"
     await queryInterface.bulkDelete(options,{
-      city:'Bellevue'
+      groupId:{[Op.in]:[1,2,2]}
     })
   }
 };
