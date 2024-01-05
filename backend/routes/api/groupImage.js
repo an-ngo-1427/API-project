@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const {GroupImage,Membership,Group} = require('../../db/models');
+const {requireAuth} = require('../../utils/auth.js');
 
-router.delete('/:imageId',async (req,res)=>{
+router.delete('/:imageId',[requireAuth],async (req,res)=>{
     const groupImage = await GroupImage.findByPk(req.params.imageId,{
     });
 
