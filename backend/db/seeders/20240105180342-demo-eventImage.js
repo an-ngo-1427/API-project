@@ -1,12 +1,11 @@
 'use strict';
-let options={};
-if(process.env.NODE_ENV==='production'){
+
+/** @type {import('sequelize-cli').Migration} */
+let options={}
+const{EventImage} = require('../models');
+if(process.env.NODE_ENV === 'production'){
   options.schema = process.env.SCHEMA
 }
-
-options.tableName = 'Memberships'
-const{Membership} = require('../models')
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -18,18 +17,17 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-   await Membership.bulkCreate([
+   await EventImage.bulkCreate([
     {
-      userId:1,
-      groupId:1,
-      status:'member',
+      eventId:1,
+      url:'event1image.url',
+      preview:true
     },
     {
-      userId:2,
-      groupId:1,
-      status:'co-host',
-    },
-
+      eventId:2,
+      url:'event2image.url',
+      preview:false
+    }
    ],{validate:true})
   },
 
@@ -41,9 +39,9 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     const Op = Sequelize.Op
+    options.tableName = 'EventImages'
     await queryInterface.bulkDelete(options,{
-      userId:{[Op.in]:[1,2]}
+      eventId:{[Op.in]:[1,2]}
     })
   }
-
 };

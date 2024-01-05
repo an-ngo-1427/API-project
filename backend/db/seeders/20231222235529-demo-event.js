@@ -21,13 +21,24 @@ module.exports = {
       {
         venueId:1,
         groupId:1,
-        name:"sadfas",
-        description:"sadcase",
-        type:"sdcawe",
+        name:"looking for Nemo",
+        description:"going out to the ocean with Marlin to look for his son. your safety is not guaranteed",
+        type:"Online",
         capacity:123,
-        price:231,
-        startDate: '2023-12-12',
-        endDate: '2023-12-12'
+        price:12.1,
+        startDate: '2024-1-1',
+        endDate: '2024-12-12'
+      },
+      {
+        venueId:2,
+        groupId:2,
+        name:"looking for Dory",
+        description:"filled with challenging activities. plenty opportunities to meet great individuals sush as Bruce, Barracuda, Darla Sherman",
+        type:"Online",
+        capacity:32,
+        price:20.1,
+        startDate: '2024-1-7',
+        endDate: '2024-10-12'
       }
     ],{validate:true})
   },
@@ -39,8 +50,9 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const Op = Sequelize.Op
     await queryInterface.bulkDelete(options,{
-      name:'sadfas'
+      groupId:{[Op.in]:[1,2]}
     })
   }
 
