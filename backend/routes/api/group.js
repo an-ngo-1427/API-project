@@ -52,6 +52,19 @@ function getGroups(groups){
 
      return groupList;
 }
+
+// getting coHost of a group
+async function isCoHost(group,req){
+    let coHost = await group.getUsers({
+        through:{
+            where:{
+                userId:req.user.id,
+                status:'co-host'
+            }
+        }
+    })
+    return coHost;
+}
 // getting all groups
 router.get('/',async (req,res)=>{
 
@@ -261,14 +274,8 @@ router.get('/:groupId/venues',[restoreUser,requireAuth],async(req,res)=>{
             "message": "Group couldn't be found"
         })
     }
-    const coHost = await group.getUsers({
-        through:{
-            where:{
-                userId:req.user.id,
-                status:'co-host'
-            }
-        }
-    })
+    const coHost = isCoHost(group,req);
+
     if(coHost[0] || req.user.id === group.organizerId){
         const Venues = await Venue.findAll({
             where:{
@@ -297,14 +304,7 @@ router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (re
             "message": "Group couldn't be found"
         })
     }
-    const coHost = await group.getUsers({
-        through:{
-            where:{
-                userId:req.user.id,
-                status:'co-host'
-            }
-        }
-    })
+    const coHost = isCoHost(group,req);
 
     if(coHost[0] || req.user.id === group.organizerId){
         const{address,city,state,lat,lng} = req.body
@@ -387,14 +387,7 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
     }
 
 
-    const coHost = await group.getUsers({
-        through:{
-            where:{
-                userId:req.user.id,
-                status:'co-host'
-            }
-        }
-    })
+    const coHost = isCoHost(group,req);
 
 
     const venue = await Venue.findByPk(req.body.venueId);
@@ -441,7 +434,7 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
 });
 
 // requesting membership
-router.post('/:groupId/membership',async (req,res)=>{
+router.post('/:groupId/membership',[requireAuth],async (req,res)=>{
     const group = await Group.findByPk(req.params.groupId)
     if(!group){
         res.statudCode = 404;
@@ -532,17 +525,12 @@ router.put('/:groupId/membership',[requireAuth,verifyStatus],async (req,res)=>{
     }
 
     // verifying user status
-    const coHost = await Membership.findOne({
-        where:{
-            userId:req.user.id,
-            status:'co-host'
-        }
-    })
+    const coHost = isCoHost(group,req);
 
     const organizer = await group.getUser();
 
 
-    if((coHost || req.user.id === organizer.id) && status === 'member'){
+    if((coHost[0] || req.user.id === organizer.id) && status === 'member'){
         membership.status = status;
         membership.save()
 
@@ -587,16 +575,11 @@ router.get('/:groupId/members',async (req,res)=>{
             "message": "Group couldn't be found"
         })
     }
-    const coHost = await Membership.findOne({
-        where:{
-            userId:req.user.id,
-            status:'co-host'
-        }
-    })
+    const coHost = isCoHost(group,req);
 
-    const organizer = await group.getUser()
 
-    if(coHost || organizer.id === req.user.id){
+
+    if(coHost[0] || group.organizerId === req.user.id){
         let Members = await group.getUsers({
             attributes:{
                 exclude:['username']
@@ -638,7 +621,7 @@ router.delete('/:groupId/membership/:memberId',[requireAuth],async (req,res)=>{
     const group = await Group.findByPk(req.params.groupId);
     if(!group){
         res.statusCode = 404;
-        res.json({
+        return res.json({
             'message':"Group couldn't be found"
         })
     }

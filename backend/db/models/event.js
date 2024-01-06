@@ -54,8 +54,8 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.STRING,
     capacity: DataTypes.INTEGER,
     price: DataTypes.DECIMAL,
-    startDate: DataTypes.DATEONLY,
-    endDate: DataTypes.DATEONLY,
+    startDate: DataTypes.DATE,
+    endDate: DataTypes.DATE,
     venueId:DataTypes.INTEGER,
     groupId:DataTypes.INTEGER
   }, {

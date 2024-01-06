@@ -5,6 +5,20 @@ const {Event,Group,Venue,EventImage,User,Attendance,Membership} = require('../..
 const {restoreUser,requireAuth,verifyStatus} = require('../../utils/auth.js');
 const {validateEvent,validateQuery} = require('../../utils/validation.js');
 const {Op} = require('sequelize')
+
+
+async function isCoHost(group,req){
+    let coHost = await group.getUsers({
+        through:{
+            where:{
+                userId:req.user.id,
+                status:'co-host'
+            }
+        }
+    })
+    return coHost;
+}
+// getting all the events
 router.get('/',validateQuery,async (req,res)=>{
     const {page,size,name,type,startDate} = req.query;
 
@@ -148,14 +162,7 @@ router.post('/:eventId/images',[requireAuth],async (req,res)=>{
         }
     })
 
-    const coHost = await group.getUsers({
-        through:{
-            where:{
-                userId:req.user.id,
-                status:'co-host'
-            }
-        }
-    })
+    const coHost = isCoHost(group,req)
 
     if(attendee || coHost[0] || req.user.id === group.organizerId){
         const{url,preview} = req.body;
@@ -194,14 +201,7 @@ router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
     }
     const group = await Group.findByPk(event.groupId)
 
-    let coHost = await group.getUsers({
-        through:{
-            where:{
-                userId:req.user.id,
-                status:'co-host'
-            }
-        }
-    })
+    let coHost = isCoHost(group,req)
 
     const venue = await Venue.findByPk(venueId);
     if(!venue){
@@ -250,14 +250,7 @@ router.delete('/:eventId',[requireAuth],async(req,res)=>{
     }
 
     const group = await Group.findByPk(event.groupId)
-    const coHost = await group.getUsers({
-        through:{
-            where:{
-                userId: req.user.id,
-                status:'co-host'
-            }
-        }
-    })
+    const coHost = isCoHost(group,req);
     if(coHost[0] || req.user.id === group.organizerId){
         await event.destroy();
         return res.json(
@@ -370,14 +363,7 @@ router.put('/:eventId/attendance',[requireAuth,verifyStatus],async (req,res)=>{
 
 
     const group = await Group.findByPk(event.groupId);
-    const coHost = await group.getUsers({
-        through:{
-            where:{
-                userId:req.user.id,
-                status:'co-host'
-            }
-        }
-    })
+    const coHost = isCoHost(group,req);
     const attendance = await Attendance.findOne({
         where:{
             userId:user.id,
@@ -421,12 +407,7 @@ router.delete('/:eventId/attendance/:userId',[requireAuth],async (req,res)=>{
     }
 
     const group = await Group.findByPk(event.groupId)
-    // const coHost = await Membership.findOne({
-    //     where:{
-    //         userId:req.user.id,
-    //         status:'co-host'
-    //     }
-    // })
+
 
     let user = await User.findByPk(req.params.userId);
     if(!user){
@@ -478,14 +459,7 @@ router.get('/:eventId/attendees',async (req,res)=>{
 
     const group = await Group.findByPk(event.groupId)
 
-    const coHost = await group.getUsers({
-        through:{
-            where:{
-                userId:req.user.id,
-                status:'co-host'
-            }
-        }
-    })
+    const coHost = isCoHost(group,req);
 
     let queryObj = {where:{}};
 
