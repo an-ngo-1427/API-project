@@ -116,7 +116,7 @@ const validateEvent=[
 const validateQuery = [
     query('page')
         .custom(value=>{
-            console.log(value)
+
             if(!value) return true;
             value = parseInt(value);
             if(value <1){
