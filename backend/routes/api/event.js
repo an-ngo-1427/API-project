@@ -23,8 +23,19 @@ router.get('/',validateQuery,async (req,res)=>{
     const {page,size,name,type,startDate} = req.query;
 
     let queryObj={where:{}};
-    queryObj.limit = size;
-    queryObj.offset = size * (page-1);
+    if(size){
+        queryObj.limit = size;
+    }else{
+        queryObj.limit = 20;
+    }
+    if(page){
+        if(size) queryObj.offset = size * (page-1);
+        else queryObj.offset = 0
+    }else{
+        queryObj.offset = 0
+    }
+
+
 
     if(name){
         queryObj.where.name = name;
@@ -111,6 +122,9 @@ router.get('/:eventId',async (req,res)=>{
     let event = await Event.findByPk(req.params.eventId,{
         include:{
             model:EventImage,
+            attributes:{
+                exclude:['eventId','createdAt','updatedAt']
+            }
         }
     });
 
@@ -326,7 +340,7 @@ router.post('/:eventId/attendance',[requireAuth],async (req,res)=>{
     }
 
     if(attendance.status === 'attending'){
-        res.statusCode = 404;
+        res.statusCode = 400;
         return res.json({
             "message": "User is already an attendee of the event"
         })
@@ -364,7 +378,7 @@ router.put('/:eventId/attendance',[requireAuth,verifyStatus],async (req,res)=>{
 
     const group = await Group.findByPk(event.groupId);
     const coHost = isCoHost(group,req);
-    const attendance = await Attendance.findOne({
+    let attendance = await Attendance.findOne({
         where:{
             userId:user.id,
             eventId:req.params.eventId
@@ -385,6 +399,8 @@ router.put('/:eventId/attendance',[requireAuth,verifyStatus],async (req,res)=>{
         attendance.status = req.body.status;
         attendance.save();
 
+        attendance = attendance.toJSON();
+        delete attendance.updatedAt
         return res.json(attendance)
     }
 
@@ -430,7 +446,7 @@ router.delete('/:eventId/attendance/:userId',[requireAuth],async (req,res)=>{
         })
     }
 
-    if(req.user.id === group.organizerId || req.userId === attendance.userId){
+    if(req.user.id === group.organizerId || req.user.id === attendance.userId){
         await attendance.destroy();
         return res.json({
             "message": "Successfully deleted attendance from event"

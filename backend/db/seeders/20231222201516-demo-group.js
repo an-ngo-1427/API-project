@@ -43,7 +43,17 @@ module.exports = {
         city:"The Sharks' lair ",
         state:"Pacific Ocean",
         organizerId:1,
-      }
+      },
+      {
+        name:"Hanging out With Darla Sherman",
+        about:"Hanging out with Dory and Nemo, the shark baiters, to get the thrill and piss off the sharks",
+        type:"Online",
+        private:false,
+        city:"The Sharks' lair ",
+        state:"Pacific Ocean",
+        organizerId:3,
+      },
+
     ],{validate:true})
   },
 

@@ -68,7 +68,7 @@ async function isCoHost(group,req){
 // getting all groups
 router.get('/',async (req,res)=>{
 
-    let groups = await Group.findAll({
+    let Groups = await Group.findAll({
         include:[
             {
                 model:User
@@ -76,39 +76,50 @@ router.get('/',async (req,res)=>{
             {
                 model:GroupImage
             }
-        ]
+        ],
+        attributes:{
+            exclude:['updatedAt','createdAt']
+        }
     });
-   groups = getGroups(groups);
+   Groups = getGroups(Groups);
 
 
     res.json({
-        groups
+        Groups
     })
 })
 
 //get groups of the current user
 router.get('/current',[restoreUser,requireAuth],async (req,res)=>{
-    const user = await User.findByPk(req.user.id)
-    let groups = await Group.findAll({
+
+
+    let Groups = await Group.findAll({
         include:[
             {
                 model:User,
-                where:{
-                    id:req.user.id
+                through:{
+                    where:{
+                        userId:req.user.id
+                    }
                 }
             },
             {
-                model:GroupImage
+                model:GroupImage,
+                attributes:{
+                    exclude:['updatedAt','createdAt']
+                }
             }
-        ]
+        ],
+        where:{
+            organizerId:req.user.id
+        }
     })
 
-    groups = getGroups(groups)
+    Groups = getGroups(Groups)
 
     res.json({
-        groups
+        Groups
     })
-
 })
 
 //get group details by specific id
@@ -116,7 +127,10 @@ router.get('/:groupId',async (req,res)=>{
     let group = await Group.findByPk(req.params.groupId,{
         include:[
             {
-                model:GroupImage
+                model:GroupImage,
+                attributes:{
+                    exclude:['updatedAt','createdAt','groupId']
+                }
             },
             {
                 model:Venue,
@@ -144,7 +158,7 @@ router.get('/:groupId',async (req,res)=>{
     let userNum = group.Users.length;
     group = group.toJSON();
     group.numMembers = userNum;
-    group.organizer = organizer;
+    group.Organizer = organizer;
     delete group.Users
     res.json({
         ...group
@@ -213,7 +227,11 @@ router.post('/:groupId/images',[restoreUser,requireAuth],async (req,res)=>{
 
 // editting group
 router.put('/:groupId',[restoreUser,requireAuth,validateGroup],async(req,res)=>{
-    let group = await Group.findByPk(req.params.groupId)
+    let group = await Group.findByPk(req.params.groupId,{
+        attributes:{
+            include:['updatedAt','createdAt']
+        }
+    })
     if(!group){
         res.statusCode = 404
         return res.json({
@@ -317,6 +335,8 @@ router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (re
             lng
         })
         Venues = Venues.toJSON()
+        delete Venues.updatedAt;
+        delete Venues.createdAt;
         return res.json({
             ...Venues
         })
@@ -437,7 +457,7 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
 router.post('/:groupId/membership',[requireAuth],async (req,res)=>{
     const group = await Group.findByPk(req.params.groupId)
     if(!group){
-        res.statudCode = 404;
+        res.statusCode = 404;
         return res.json(
             {
                 "message": "Group couldn't be found"
