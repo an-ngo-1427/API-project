@@ -39,6 +39,17 @@ module.exports = {
         price:20.1,
         startDate: '2024-1-7',
         endDate: '2024-10-12'
+      },
+      {
+        venueId:1,
+        groupId:2,
+        name:"Swimming in the Ocean",
+        description:"Hanging out with Darla Sherman on the beach. Playing with the fish in the ocean and annoying them",
+        type:"In Person",
+        capacity:32,
+        price:20.1,
+        startDate: '2024-1-7',
+        endDate: '2024-10-12'
       }
     ],{validate:true})
   },

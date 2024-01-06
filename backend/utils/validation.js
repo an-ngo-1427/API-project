@@ -38,6 +38,9 @@ const validateGroup = [
     check('state')
         .exists({checkFalsy:true})
         .withMessage("State is required"),
+    check('private')
+        .isBoolean()
+        .withMessage('Private must be a boolean'),
     handleValidationErrors
 ];
 
@@ -112,11 +115,25 @@ const validateEvent=[
 
 const validateQuery = [
     query('page')
-        .isInt({min:1})
-        .withMessage("Page must be greater than or equal to 1"),
+        .custom(value=>{
+
+            if(!value) return true;
+            value = parseInt(value);
+            if(value <1){
+                throw new Error('Page must be greater than or equal to 1')
+            }
+            return true
+        }),
     query('size')
-        .isInt({min:1})
-        .withMessage("Size must be greater than or equal to 1"),
+        .custom(value=>{
+            if(!value) return true;
+            value = parseInt(value);
+            if(value <1){
+                throw new Error('Page must be greater than or equal to 1')
+            }
+            return true
+        }),
+
     query('name')
         .custom(value=>{
             if(!value) return true;

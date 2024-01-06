@@ -26,6 +26,26 @@ module.exports = {
       eventId:2,
       userId:1,
       status:'pending'
+    },
+    {
+      eventId:2,
+      userId:2,
+      status:'attending'
+    },
+    {
+      eventId:1,
+      userId:2,
+      status:'waitlist'
+    },
+    {
+      eventId:1,
+      userId:4,
+      status:'attending'
+    },
+    {
+      eventId:3,
+      userId:6,
+      status:'pending'
     }
    ],{validate:true})
   },
@@ -40,7 +60,7 @@ module.exports = {
       options.tableName = "Attendances"
       const Op = Sequelize.Op
     await queryInterface.bulkDelete(options,{
-      userId:{[Op.in]:[3,1]}
+      userId:{[Op.in]:[3,1,2,4,6]}
     })
   }
 };
