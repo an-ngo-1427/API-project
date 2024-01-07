@@ -13,6 +13,7 @@ function getGroups(groups){
 
     groups.forEach(group=>{
         //obtaining user numbers for each group and assign the numbers to the group object property
+        group = group.toJSON();
         let userNum = group.Users.length
         //obtaining image urls if preview Image is true
         let imageUrl;
@@ -35,7 +36,6 @@ function getGroups(groups){
             }
         }
 
-        group = group.toJSON();
         group.numMembers = userNum;
         group.previewImage = imageUrl;
         groupList.push(group)
@@ -133,6 +133,7 @@ router.get('/:groupId',async (req,res)=>{
                 model:GroupImage,
                 attributes:{
                     exclude:['updatedAt','createdAt','groupId']
+
                 }
             },
             {
@@ -144,7 +145,10 @@ router.get('/:groupId',async (req,res)=>{
             {
                 model:User
             }
-        ]
+        ],
+        attributes:{
+            include:['updatedAt','createdAt']
+        }
     });
     if(!group){
         res.statusCode = 404;
@@ -664,6 +668,9 @@ router.get('/:groupId/members',async (req,res)=>{
                     [Op.in]:['co-host','member']
                 }
             }
+        },
+        attributes:{
+            exclude:['username']
         },
         joinTableAttributes:['status']
 

@@ -116,25 +116,30 @@ const validateEvent=[
 
 const validateQuery = [
     query('page')
-        .custom(value=>{
+        // .custom(value=>{
 
-            if(!value) return true;
-            value = parseInt(value);
-            if(value <1){
-                throw new Error('Page must be greater than or equal to 1')
-            }
-            return true
-        }),
+        //     if(!value) return true;
+        //     value = parseInt(value);
+        //     if(value <1){
+        //         throw new Error('Page must be greater than or equal to 1')
+        //     }
+        //     return true
+        // }),
+        .optional()
+        .isInt({min:1})
+        .withMessage('Page must be greater than or equal to 1'),
     query('size')
-        .custom(value=>{
-            if(!value) return true;
-            value = parseInt(value);
-            if(value <1){
-                throw new Error('Page must be greater than or equal to 1')
-            }
-            return true
-        }),
-
+        // .custom(value=>{
+        //     if(!value) return true;
+        //     value = parseInt(value);
+        //     if(value <1){
+        //         throw new Error('Page must be greater than or equal to 1')
+        //     }
+        //     return true
+        // }),
+        .optional()
+        .isInt({min:1})
+        .withMessage("Size must be greater than or equal to 1"),
     query('name')
         .custom(value=>{
             if(!value) return true;
