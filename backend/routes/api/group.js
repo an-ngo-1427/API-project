@@ -1,5 +1,5 @@
 const express = require('express');
-const {Group,User,GroupImage,Venue,Event,Membership} = require('../../db/models');
+const {Group,User,GroupImage,Venue,Event,Membership,EventImage} = require('../../db/models');
 const {check} = require('express-validator')
 const sequelize = require('sequelize')
 router = express.Router();
@@ -78,7 +78,7 @@ router.get('/',async (req,res)=>{
             }
         ],
         attributes:{
-            exclude:['updatedAt','createdAt']
+            include:['updatedAt','createdAt']
         }
     });
    Groups = getGroups(Groups);
@@ -112,6 +112,9 @@ router.get('/current',[restoreUser,requireAuth],async (req,res)=>{
         ],
         where:{
             organizerId:req.user.id
+        },
+        attributes:{
+            include:['createdAt','updatedAt']
         }
     })
 
@@ -265,7 +268,7 @@ router.put('/:groupId',[restoreUser,requireAuth,validateGroup],async(req,res)=>{
 router.delete('/:groupId',[restoreUser,requireAuth],async(req,res)=>{
     const group = await Group.findByPk(req.params.groupId)
     if(!group){
-        res.statudCode = 404;
+        res.statusCode = 404;
         return res.json({
             "message": "Group couldn't be found"
         })
@@ -292,7 +295,7 @@ router.get('/:groupId/venues',[restoreUser,requireAuth],async(req,res)=>{
             "message": "Group couldn't be found"
         })
     }
-    const coHost = isCoHost(group,req);
+    const coHost = await isCoHost(group,req);
 
     if(coHost[0] || req.user.id === group.organizerId){
         const Venues = await Venue.findAll({
@@ -322,8 +325,8 @@ router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (re
             "message": "Group couldn't be found"
         })
     }
-    const coHost = isCoHost(group,req);
-
+    const coHost = await isCoHost(group,req);
+    console.log(coHost)
     if(coHost[0] || req.user.id === group.organizerId){
         const{address,city,state,lat,lng} = req.body
         let Venues = await Venue.create({
@@ -362,12 +365,29 @@ router.get('/:groupId/events',async (req,res)=>{
 
     let Events=[]
     let allEvents =  await Event.findAll({
-        attributes:{
-            exclude:['groupId']
-        },
+        // attributes:{
+        //     include:['groupId','venueId']
+        // },
         where:{
             groupId:group.id
-        }
+        },
+        attributes:{
+            exclude:['description','capacity','price']
+        },
+        include:[
+            {
+                model:User,
+                through:{
+                    where:{
+                        status:'attending'
+                    }
+                }
+            },
+            {
+                model:EventImage
+            }
+
+        ]
 
     });
 
@@ -377,14 +397,38 @@ router.get('/:groupId/events',async (req,res)=>{
     });
     allEvents.forEach(event=>{
         event = event.toJSON()
+        // getting all users attending
+        const numUsers = event.Users.length
+
+        // getting venue
         if(!event.venueId) event.Venue = null
         Venues.forEach(venue=>{
             if(venue.id === event.venueId){
                 event.Venue = venue;
             }
         })
-        event.Group = group
-        delete event.venueId;
+
+        // getting image url
+        let imageUrl;
+        if(!event.EventImages.length){
+            imageUrl = "no pictures found"
+        }
+        event.EventImages.forEach(image=>{
+            if(image.preview){
+                if(image.url){
+                    imageUrl = image.url
+                }
+            }else{
+                imageUrl = "no preview"
+            }
+        })
+
+
+        event.Group = group;
+        event.numAttending = numUsers;
+        event.previewImage = imageUrl;
+        delete event.Users;
+        delete event.EventImages;
         Events.push(event)
     })
 
@@ -407,7 +451,7 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
     }
 
 
-    const coHost = isCoHost(group,req);
+    const coHost = await isCoHost(group,req);
 
 
     const venue = await Venue.findByPk(req.body.venueId);
@@ -423,7 +467,7 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
 
         let{name,type,capacity,price,description,startDate,endDate} = req.body;
         capacity = parseInt(capacity);
-        price = parseInt(price);
+        price = parseFloat(price);
 
         let newEvent = await Event.create({
             groupId:parseInt(req.params.groupId),
@@ -545,12 +589,12 @@ router.put('/:groupId/membership',[requireAuth,verifyStatus],async (req,res)=>{
     }
 
     // verifying user status
-    const coHost = isCoHost(group,req);
+    const coHost = await isCoHost(group,req);
 
     const organizer = await group.getUser();
 
 
-    if((coHost[0] || req.user.id === organizer.id) && status === 'member'){
+    if((coHost[0] || req.user.id === organizer.id) && (status === 'member')){
         membership.status = status;
         membership.save()
 
@@ -563,6 +607,7 @@ router.put('/:groupId/membership',[requireAuth,verifyStatus],async (req,res)=>{
             }
         )
     }
+
 
     if(organizer.id == req.user.id && status === 'co-host'){
 
@@ -595,7 +640,7 @@ router.get('/:groupId/members',async (req,res)=>{
             "message": "Group couldn't be found"
         })
     }
-    const coHost = isCoHost(group,req);
+    const coHost = await isCoHost(group,req);
 
 
 
