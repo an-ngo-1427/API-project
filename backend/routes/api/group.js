@@ -326,7 +326,7 @@ router.post('/:groupId/venues',[restoreUser,requireAuth,validateVenue],async (re
         })
     }
     const coHost = await isCoHost(group,req);
-    console.log(coHost)
+
     if(coHost[0] || req.user.id === group.organizerId){
         const{address,city,state,lat,lng} = req.body
         let Venues = await Venue.create({
