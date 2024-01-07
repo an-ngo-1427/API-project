@@ -59,6 +59,9 @@ router.get('/',validateQuery,async (req,res)=>{
                 model:EventImage
             }
         ],
+        attributes:{
+            exclude:['description','capacity','price']
+        },
         ...queryObj
     });
     const groups  = await Group.findAll({
@@ -139,7 +142,7 @@ router.get('/:eventId',async (req,res)=>{
     const numAttending = users.length;
 
     const group = await Group.findByPk(event.groupId,{
-        attributes:['id','name','private','state']
+        attributes:['id','name','private','state','city']
     });
     const venue = await Venue.findByPk(event.venueId,{
         attributes:['id','address','city','state','lat','lng']
@@ -176,7 +179,7 @@ router.post('/:eventId/images',[requireAuth],async (req,res)=>{
         }
     })
 
-    const coHost = isCoHost(group,req)
+    const coHost = await isCoHost(group,req)
 
     if(attendee || coHost[0] || req.user.id === group.organizerId){
         const{url,preview} = req.body;
@@ -215,7 +218,7 @@ router.put('/:eventId',[requireAuth,validateEvent],async (req,res)=>{
     }
     const group = await Group.findByPk(event.groupId)
 
-    let coHost = isCoHost(group,req)
+    let coHost = await isCoHost(group,req)
 
     const venue = await Venue.findByPk(venueId);
     if(!venue){
@@ -264,7 +267,7 @@ router.delete('/:eventId',[requireAuth],async(req,res)=>{
     }
 
     const group = await Group.findByPk(event.groupId)
-    const coHost = isCoHost(group,req);
+    const coHost = await isCoHost(group,req);
     if(coHost[0] || req.user.id === group.organizerId){
         await event.destroy();
         return res.json(
@@ -347,7 +350,7 @@ router.post('/:eventId/attendance',[requireAuth],async (req,res)=>{
     }
 
     if(attendance.status === 'waitlist' || attendance.status === 'pending'){
-        res.statusCode = 404;
+        res.statusCode = 400;
         return res.json({
             "message": "Attendance has already been requested"
         })
@@ -377,7 +380,7 @@ router.put('/:eventId/attendance',[requireAuth,verifyStatus],async (req,res)=>{
 
 
     const group = await Group.findByPk(event.groupId);
-    const coHost = isCoHost(group,req);
+    const coHost = await isCoHost(group,req);
     let attendance = await Attendance.findOne({
         where:{
             userId:user.id,
@@ -475,7 +478,7 @@ router.get('/:eventId/attendees',async (req,res)=>{
 
     const group = await Group.findByPk(event.groupId)
 
-    const coHost = isCoHost(group,req);
+    const coHost = await isCoHost(group,req);
 
     let queryObj = {where:{}};
 
