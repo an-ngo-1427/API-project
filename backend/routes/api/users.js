@@ -69,7 +69,7 @@ router.post('/',validateSignup,async (req,res,next)=>{
     if(existedUsername){
       const err = new Error('User already exists');
         err.status = 500;
-        err.errors = {email:'User with that username already exists'};
+        err.errors = {username:'User with that username already exists'};
         return next(err);
     }
     const hashedPassword = bcrypt.hashSync(password);
