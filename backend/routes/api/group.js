@@ -644,6 +644,7 @@ router.get('/:groupId/members',async (req,res)=>{
             "message": "Group couldn't be found"
         })
     }
+
     const coHost = await isCoHost(group,req);
 
 
