@@ -16,14 +16,14 @@ function Navigation({ isLoaded }) {
       </li>
     ) : (
       <>
-        <li>
+        <li className='user-list'>
           <OpenModalButton
             buttonText="Log In"
             modalComponent={<LoginFormModal />}
           />
           {/* <NavLink to="/login">Log In</NavLink> */}
         </li>
-        <li>
+        <li className='user-list'>
           <OpenModalButton
             buttonText="Sign Up"
             modalComponent={<SignupFormModal />}
@@ -34,12 +34,11 @@ function Navigation({ isLoaded }) {
     );
 
   return (
-    <ul>
-      <li>
-        <NavLink to="/">Home</NavLink>
-      </li>
-      {isLoaded && sessionLinks}
-    </ul>
+    <>
+    {isLoaded && sessionLinks}
+
+    </>
+
   );
 }
 

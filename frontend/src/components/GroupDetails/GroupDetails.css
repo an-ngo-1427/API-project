@@ -1,0 +1,42 @@
+.group-detail{
+    display: flex;
+    flex-direction: row;
+    gap:25px;
+    justify-content: center;
+    align-items: center;
+    padding:25px;
+    border-bottom: 1px solid gray;
+    margin: 0px auto 0px;
+    width:50%;
+    cursor: pointer;
+
+}
+
+.group-detail:hover{
+    box-shadow: 3px 3px 3px 3px gray;
+}
+
+.details{
+    width:600px;
+}
+
+.group-detail>img{
+    width:15%;
+}
+
+.group-detail>p{
+    text-wrap: wrap;
+}
+
+.add-info{
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+    color: gray;
+    align-items: center;
+    align-content: center;
+}
+a.active{
+    text-decoration: underline;
+    color:teal;
+}
