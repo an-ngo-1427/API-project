@@ -7,7 +7,7 @@ import configureStore from './store';
 import { restoreCSRF, csrfFetch } from './store/csrf';
 import * as sessionActions from './store/session';
 import { ModalProvider, Modal } from './context/Modal';
-
+import DocumentTitle from 'react-document-title';
 const store = configureStore();
 
 if (import.meta.env.MODE !== "production") {
@@ -29,6 +29,7 @@ if (import.meta.env.MODE !== "production") {
 // HTML elements on top of the all the other HTML elements:
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <DocumentTitle title = "Meet Nemo">
     <ModalProvider>
       <Provider store={store}>
         <App />
@@ -36,5 +37,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Modal />
       </Provider>
     </ModalProvider>
+
+    </DocumentTitle>
   </React.StrictMode>
 );

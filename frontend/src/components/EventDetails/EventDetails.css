@@ -1,0 +1,14 @@
+.event-details{
+    display: flex;
+    flex-direction: row;
+    font-size: 20px;
+    gap:20px
+}
+
+.event-image{
+    width:300px;
+}
+
+.event-image>img{
+    width:100%;
+}
