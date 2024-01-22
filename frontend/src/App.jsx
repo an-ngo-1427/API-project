@@ -6,7 +6,7 @@ import { Outlet, createBrowserRouter, RouterProvider, useNavigate } from 'react-
 // import SignupFormPage from './components/SignupFormPage';
 import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
-import logo from '../../images/Iconshock-Finding-Nemo-Nemo.256.png'
+import logo from '../../images/android-chrome-192x192.png'
 import HomePage from './components/HomePage/HomePage';
 import GroupList from './components/GroupList';
 import GroupShow from './components/GroupShow/GroupShow';
