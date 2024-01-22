@@ -10,6 +10,8 @@ import logo from '../../images/android-chrome-192x192.png'
 import HomePage from './components/HomePage/HomePage';
 import GroupList from './components/GroupList';
 import GroupShow from './components/GroupShow/GroupShow';
+import EventList from './components/EventList';
+import EventShow from './components/EventShow';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -56,6 +58,14 @@ const router = createBrowserRouter([
       {
         path: '/groups/:groupId',
         element: <GroupShow/>
+      },
+      {
+        path:'/events',
+        element:<EventList/>
+      },
+      {
+        path:'/events/:eventId',
+        element:<EventShow/>
       }
     ]
   }

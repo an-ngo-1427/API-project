@@ -1,12 +1,26 @@
 .event-details{
     display: flex;
     flex-direction: row;
-    font-size: 20px;
-    gap:20px
+    gap:25px;
+    justify-content: center;
+    align-items: center;
+    padding:25px;
+    border-bottom: 1px solid gray;
+    margin: 0px auto 0px;
+    width:50%;
+    cursor: pointer;
+}
+
+.event-details:hover{
+    box-shadow: 3px 3px 3px 3px gray;
+}
+
+.event-description{
+    width:600px;
 }
 
 .event-image{
-    width:300px;
+    width:15%;
 }
 
 .event-image>img{

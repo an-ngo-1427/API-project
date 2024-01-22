@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import './GroupShow.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -11,7 +11,7 @@ function GroupShow() {
 
     const dispatch = useDispatch();
     const group = useSelector(state => state.currGroup)
-    console.log(group)
+    const user = useSelector(state=>state.session.user)
     const events = useSelector(state => state.events)
     const eventsArr = Object.values(events);
     eventsArr.sort((a, b) => {
@@ -20,7 +20,7 @@ function GroupShow() {
 
 
     })
-    if (eventsArr.length) console.log(eventsArr);
+
 
     const groupEvents = eventsArr.filter(event => event.groupId === group.id)
 
@@ -41,6 +41,7 @@ function GroupShow() {
     }
     return (
         <div>
+            <NavLink to={`/groups`}>{`< Groups`}</NavLink>
             <div className='group-header'>
                 <div className='group-pic'>
                     {group.GroupImages.map(image=><img key={image.id} src ={image.url}/>)}
@@ -54,7 +55,16 @@ function GroupShow() {
                         <span>{group.private ? 'Private' : ''}</span>
                     </div>
                     <div>{`Organized by ${group?.Organizer?.firstName} ${group?.Organizer?.lastName}`}</div>
-                    <button onClick={() => { window.alert('feature comming soon') }} className='join-group'>Join this group</button>
+                    {user && user.id !== group.organizerId && <button onClick={() => { window.alert('feature comming soon') }} className='join-group'>Join this group</button>}
+                    {user && user.id === group.organizerId &&
+                        <div className='organizer button'>
+                            <button className='create-events'>Create an event</button>
+                            <button className= 'update'>Update</button>
+                            <button className = 'delete'>Delete</button>
+                        </div>
+                    }
+
+
                 </div>
             </div>
             <div className='group-detail-body'>
@@ -69,6 +79,7 @@ function GroupShow() {
                         <p>{group.about}</p>
                     </div>
                 </div>
+                <h2>Events</h2>
                 <div className='upcomming'>
                     <h3>{`Upcomming events (${upCommingEvents.length})`}</h3>
                     {upCommingEvents.map(event => <EventDetails key={event.id} event={event} />)}
