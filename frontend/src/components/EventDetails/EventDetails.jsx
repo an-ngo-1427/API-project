@@ -1,13 +1,15 @@
+import { useNavigate } from 'react-router-dom';
 import './EventDetails.css'
 
 function EventDetails({ event }) {
-    console.log(event)
+    const navigate = useNavigate()
     const day = event.startDate.substring(0, 10);
     const time = event.startDate.substring(11, 16);
-    console.log(day)
-    console.log(time)
+    const clickHandle = ()=>{
+        navigate(`/events/${event.id}`)
+    }
     return (
-        <div className='event-details'>
+        <div onClick={clickHandle} className='event-details'>
             <div className='event-image'>
                 <img src='https://www.rollingstone.com/wp-content/uploads/2023/05/Finding-Nemo-Anniversary.jpg?w=1581&h=1054&crop=1' />
             </div>

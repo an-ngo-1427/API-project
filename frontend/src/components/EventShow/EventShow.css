@@ -1,0 +1,49 @@
+.event-overview>img{
+    width:500px;
+}
+
+.event-group>img{
+    width:10%;
+}
+
+.event-overview{
+    display: flex;
+    flex-direction:row;
+    gap: 100px;
+}
+
+.event-group{
+    display: flex;
+    flex-direction: row;
+    gap:15px;
+    padding:25px;
+    border-bottom: 1px solid gray;
+    width:400px;
+
+}
+
+.event-group>*{
+    flex-grow:1
+}
+
+.event-info{
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    padding: 25px;
+    font-size: x-large;
+}
+
+.event-detail-description{
+    width:fit-content;
+}
+
+.event-show{
+    margin:auto;
+    font-size: large;
+}
+
+.event-group:hover{
+    cursor: pointer;
+    box-shadow: 3px 3px 3px 3px gray;
+}

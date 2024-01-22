@@ -24,9 +24,9 @@
     width:15%;
 }
 
-.group-detail>p{
+/* .group-detail>p{
     text-wrap: wrap;
-}
+} */
 
 .add-info{
     display: flex;

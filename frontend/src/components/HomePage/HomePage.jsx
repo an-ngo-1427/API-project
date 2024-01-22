@@ -35,7 +35,7 @@ function HomePage() {
                 </div>
                 <div className='item'>
                     <img className='main-item-image' src={squirtImg}></img>
-                    <NavLink>Find an event</NavLink>
+                    <NavLink to={`/events`}>Find an event</NavLink>
                 </div>
                 <div className='item'>
                     <img className='main-item-image' src={groupImg}></img>
