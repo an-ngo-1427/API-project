@@ -13,6 +13,12 @@ function EventList() {
         if (Date.parse(a.startDate) < Date.parse(b.startDate)) return 1
         else return -1
     })
+    console.log(eventsArr)
+    let pastEvents = eventsArr.filter(event=>Date.parse(event.startDate) < Date.now())
+    let commingEvents = eventsArr.filter(event=>Date.parse(event.startDate) > Date.now())
+
+    commingEvents.reverse();
+
 
     useEffect(() => {
         dispatch(getEventsThunk());
@@ -25,8 +31,8 @@ function EventList() {
             </div>
             <span className='event-caption'>{`events in Meetup (${eventsArr.length})`}</span>
             <div className='events-list'>
-                {eventsArr.map(event => <EventDetails key={event.id} event={event} />)}
-
+                {commingEvents.map(event => <EventDetails key = {event.id} event = {event} />)}
+                {pastEvents.map(event=><EventDetails key = {event.id} event = {event} />)}
             </div>
 
         </div>

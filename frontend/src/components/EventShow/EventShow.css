@@ -47,3 +47,13 @@
     cursor: pointer;
     box-shadow: 3px 3px 3px 3px gray;
 }
+
+.event-info-item{
+    display: flex;
+    flex-direction: row;
+    gap:25px;
+}
+
+.icon{
+    font-size: 45px;
+}
