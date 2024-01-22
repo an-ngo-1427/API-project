@@ -142,16 +142,18 @@ router.get('/:eventId',async (req,res)=>{
     const numAttending = users.length;
 
     const group = await Group.findByPk(event.groupId,{
-        attributes:['id','name','private','state','city']
+        attributes:['id','name','private','state','city','organizerId']
     });
+    const organizer = await User.findByPk(group.organizerId);
     const venue = await Venue.findByPk(event.venueId,{
         attributes:['id','address','city','state','lat','lng']
     });
     event = event.toJSON();
-    event.Group = group;
+    event.Group = group.toJSON();
     event.Venue = venue;
     event.numAttending = numAttending;
-
+    event.Group.Organizer = organizer
+    console.log(event);
     res.json({
         ...event
     })
