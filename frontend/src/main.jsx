@@ -29,6 +29,7 @@ if (import.meta.env.MODE !== "production") {
 // HTML elements on top of the all the other HTML elements:
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+
     <ModalProvider>
       <Provider store={store}>
         <App />
@@ -36,5 +37,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Modal />
       </Provider>
     </ModalProvider>
+
+
   </React.StrictMode>
 );

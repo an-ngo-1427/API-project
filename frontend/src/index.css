@@ -1,1 +1,39 @@
 /* TODO: Add sitewide styles */
+.header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 50px;
+    padding-right: 50px;
+    align-items: center;
+    height:100px;
+
+
+}
+
+.logo{
+    width:100px;
+    cursor: pointer;
+}
+
+.fas{
+    width:150px
+}
+
+.user-list{
+    list-style:none;
+    display: flex;
+    height:40px;
+
+}
+
+.nav-head{
+    display: flex;
+    flex-direction: row;
+    gap:35px;
+}
+
+.page{
+    display: flex;
+    flex-direction: column;
+}

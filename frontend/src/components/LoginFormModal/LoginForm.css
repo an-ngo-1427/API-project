@@ -1,0 +1,17 @@
+form{
+    padding:30px;
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    align-content: space-between;
+}
+
+label{
+    display: flex;
+    flex-direction: row;
+    gap:10px;
+}
+
+span{
+    cursor: pointer;
+}

@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import * as sessionActions from '../../store/session';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
+  const navigate=useNavigate();
+
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
@@ -29,6 +32,7 @@ function ProfileButton({ user }) {
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
+    navigate('/')
   };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
@@ -39,9 +43,9 @@ function ProfileButton({ user }) {
         <i className="fas fa-user-circle" />
       </button>
       <ul className={ulClassName} ref={ulRef}>
-        <li>{user.username}</li>
-        <li>{user.firstName} {user.lastName}</li>
+        <li> Hello, {user.firstName}</li>
         <li>{user.email}</li>
+        <li><NavLink to='/groups'>See all groups</NavLink></li>
         <li>
           <button onClick={logout}>Log Out</button>
         </li>
@@ -51,4 +55,3 @@ function ProfileButton({ user }) {
 }
 
 export default ProfileButton;
-

@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Outlet, createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
+// import LoginFormPage from './components/LoginFormPage/LoginFormPage';
 // import LoginFormPage from './components/LoginFormPage';
 // import SignupFormPage from './components/SignupFormPage';
 import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
+import logo from '../../images/android-chrome-192x192.png'
+import HomePage from './components/HomePage/HomePage';
+import GroupList from './components/GroupList';
+import GroupShow from './components/GroupShow/GroupShow';
 
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
@@ -16,11 +22,22 @@ function Layout() {
     });
   }, [dispatch]);
 
+
   return (
-    <>
-      <Navigation isLoaded={isLoaded} />
-      {isLoaded && <Outlet />}
-    </>
+    <div className='page'>
+      <div className='header'>
+
+        <img onClick={() => { navigate('/') }} className='logo' src={logo} />
+        <nav className='nav-head'>
+          <Navigation isLoaded={isLoaded} />
+
+        </nav>
+      </div>
+
+          {isLoaded && <Outlet />}
+    </div>
+
+
   );
 }
 
@@ -30,16 +47,16 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <h1>Not welcome</h1>
+        element: <HomePage />
       },
-      // {
-      //   path: 'login',
-      //   element: <LoginFormPage />
-      // },
-      // {
-      //   path: 'signup',
-      //   element: <SignupFormPage />
-      // }
+      {
+        path: '/groups',
+        element: <GroupList/>
+      },
+      {
+        path: '/groups/:groupId',
+        element: <GroupShow/>
+      }
     ]
   }
 ]);
