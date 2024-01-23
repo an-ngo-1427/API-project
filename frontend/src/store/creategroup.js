@@ -1,4 +1,6 @@
 //creating a new group
+
+import { csrfFetch } from './csrf';
 const CREATE_GROUP = '/groups/CREATE_GROUP'
 export const createGroup = (group)=>{
     return{
@@ -9,11 +11,8 @@ export const createGroup = (group)=>{
 
 // creating a group
 export const createGroupThunk = (newGroup)=>async (dispatch)=>{
-    const response = await fetch('/api/groups',{
+    const response = await csrfFetch('/api/groups',{
         method:'POST',
-        headers:{
-            'Content-Type':'application/json'
-        },
         body:JSON.stringify(newGroup)
     })
     const data = await response.json()
