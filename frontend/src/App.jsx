@@ -75,7 +75,7 @@ const router = createBrowserRouter([
         element: <EventList />
       },
       {
-        path:'/events/new',
+        path:'/groups/:groupId/events/new',
         element: <EventForm/>
       },
       {

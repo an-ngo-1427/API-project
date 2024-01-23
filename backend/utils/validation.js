@@ -86,7 +86,7 @@ const validateEvent=[
         .exists({checkFalsy:true})
         .custom(value=>{
 
-            if(value<=0){
+            if(value<0){
                 throw new Error("Price is invalid")
             }
             return true

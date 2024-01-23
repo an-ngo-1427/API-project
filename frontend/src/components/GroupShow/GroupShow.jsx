@@ -58,7 +58,7 @@ function GroupShow() {
                     {user && user.id !== group.organizerId && <button onClick={() => { window.alert('feature comming soon') }} className='join-group'>Join this group</button>}
                     {user && user.id === group.organizerId &&
                         <div className='organizer button'>
-                            <button className='create-events'><NavLink to='/events/new'>Create an event</NavLink></button>
+                            <button className='create-events'><NavLink to={`/groups/${groupId}/events/new`}>Create an event</NavLink></button>
                             <button className= 'update'>Update</button>
                             <button className = 'delete'>Delete</button>
                         </div>

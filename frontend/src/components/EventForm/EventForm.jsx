@@ -1,8 +1,12 @@
-import { useSelector } from 'react-redux';
+import {useSelector } from 'react-redux';
 import './EventForm.css'
 import { useEffect, useState } from 'react';
+import { csrfFetch } from '../../store/csrf';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function EventForm(){
+    const {groupId} = useParams();
+
     const group = useSelector(state=>state.currGroup);
     const [name,setName] = useState('');
     const [type,setType] = useState('');
@@ -14,6 +18,26 @@ function EventForm(){
     const [description,setDescription] = useState('');
     const [errObj,setErrObj] = useState({});
     const [formErr,setFormErr] = useState(false);
+    const navigate = useNavigate();
+
+    const createEvent = async (newEvent)=>{
+        const response = await csrfFetch(`/api/groups/${groupId}/events`,{
+            method:'POST',
+            body:JSON.stringify(newEvent)
+        })
+        const data = await response.json()
+        return data
+    }
+
+    const createEventImage = async (eventId,newImage)=>{
+        const response = await csrfFetch(`/api/events/${eventId}/images`,{
+            method:'POST',
+            body:JSON.stringify(newImage)
+        })
+        const data = await response.json()
+        return data
+    }
+
 
     useEffect(()=>{
         let err = {}
@@ -31,10 +55,35 @@ function EventForm(){
         setErrObj(err);
     },[name,type,isPrivate,price,startDate,endDate,imgUrl,description])
 
+
     const handleSubmit = (e)=>{
         e.preventDefault()
         if(Object.values(errObj).length) setFormErr(true)
-        console.log(errObj)
+        else{
+            const eventObj = {
+                venueId:1,
+                name,
+                type,
+                capacity:20,
+                price,
+                description,
+                startDate,
+                endDate
+            }
+
+            const imageObj = {
+                url:imgUrl,
+                preview:true
+            }
+            let newEventId;
+            createEvent(eventObj)
+                .then((event)=>{
+                    newEventId = event.id
+                    return createEventImage(event.id,imageObj);
+                })
+                .then(()=>{navigate(`/events/${newEventId}`)});
+
+        }
 
     }
     return(
@@ -86,7 +135,7 @@ function EventForm(){
                     <h3>{`When does your event start?`}</h3>
                     <input
                         value={startDate}
-                        placeholder='MM/DD/YYYY HH:mm AM'
+                        placeholder='YYYY-MM-DD HH:mm AM'
                         onChange={(e)=>setStartDate(e.target.value)}
                     />
                 </div>
@@ -95,7 +144,7 @@ function EventForm(){
                     <h3>{`When does your event end?`}</h3>
                     <input
                         value={endDate}
-                        placeholder='MM/DD/YYYY HH:mm AM'
+                        placeholder='YYYY-MM-DD HH:mm AM'
                         onChange={(e)=>setEndDate(e.target.value)}
                     />
                 </div>
@@ -118,7 +167,7 @@ function EventForm(){
                     />
                 </div>
                 {formErr && <div style={{color:'red'}}>{errObj.description}</div>}
-                <button type='submit' onClick={(e)=>{handleSubmit(e)}}>Create Event</button>
+                <button type='submit' onClick={(e)=>handleSubmit(e)}>Create Event</button>
             </form>
         </div>
     )
