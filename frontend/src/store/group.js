@@ -11,6 +11,14 @@ export const getGroups = (groups)=>{
     }
 }
 
+// //creating a new group
+// const CREATE_GROUP = '/groups/CREATE_GROUP'
+// export const createGroup = (group)=>{
+//     return{
+//         type:CREATE_GROUP,
+//         group
+//     }
+// }
 // getting one group by Id
 
 
@@ -26,7 +34,20 @@ export const getGroupsThunk = ()=>async (dispatch)=>{
     return data
 }
 
-// getting group by specified Id
+// // creating a group
+// export const createGroupThunk = (newGroup)=>async (dispatch)=>{
+//     const response = await fetch('/api/groups',{
+//         method:'POST',
+//         headers:{
+//             'Content-Type':'application/json'
+//         },
+//         body:JSON.stringify(newGroup)
+//     })
+//     data.
+//     if(response.ok){
+//         dispatch(createGroup())
+//     }
+// }
 
 
 

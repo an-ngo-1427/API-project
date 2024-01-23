@@ -5,13 +5,16 @@ import groupReducer from './group';
 import eventReducer from './event';
 import groupIdReducer from './groupdetail';
 import eventIdReducer from './eventdetail';
+import createGroupReducer from './creategroup';
+
 
 const rootReducer = combineReducers({
   session: sessionReducer,
   groups: groupReducer,
   events: eventReducer,
   currGroup : groupIdReducer,
-  currEvent : eventIdReducer
+  currEvent : eventIdReducer,
+  newGroup: createGroupReducer
 });
 
 let enhancer;

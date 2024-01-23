@@ -12,11 +12,14 @@ import GroupList from './components/GroupList';
 import GroupShow from './components/GroupShow/GroupShow';
 import EventList from './components/EventList';
 import EventShow from './components/EventShow';
-
+import GroupForm from './components/GroupForm/GroupForm';
+import { useSelector } from 'react-redux'
+import {NavLink} from 'react-router-dom'
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
+  const user = useSelector(state => state.session.user);
 
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
@@ -30,13 +33,16 @@ function Layout() {
       <div className='header'>
 
         <img onClick={() => { navigate('/') }} className='logo' src={logo} />
-        <nav className='nav-head'>
-          <Navigation isLoaded={isLoaded} />
+        <div className = 'head-session'>
+          {user && <NavLink to='/groups/new'>Start a new group</NavLink>}
+          <nav className='nav-head'>
+            <Navigation isLoaded={isLoaded} />
+          </nav>
 
-        </nav>
+        </div>
       </div>
 
-          {isLoaded && <Outlet />}
+      {isLoaded && <Outlet />}
     </div>
 
 
@@ -53,19 +59,23 @@ const router = createBrowserRouter([
       },
       {
         path: '/groups',
-        element: <GroupList/>
+        element: <GroupList />
       },
       {
         path: '/groups/:groupId',
-        element: <GroupShow/>
+        element: <GroupShow />
       },
       {
-        path:'/events',
-        element:<EventList/>
+        path: '/groups/new',
+        element: <GroupForm />
       },
       {
-        path:'/events/:eventId',
-        element:<EventShow/>
+        path: '/events',
+        element: <EventList />
+      },
+      {
+        path: '/events/:eventId',
+        element: <EventShow />
       }
     ]
   }
