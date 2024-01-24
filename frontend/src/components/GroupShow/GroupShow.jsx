@@ -28,7 +28,7 @@ function GroupShow() {
     const upCommingEvents = groupEvents.filter(event => Date.parse(event.startDate) > Date.now());
 
     const pastEvents = groupEvents.filter(event => Date.parse(event.startDate) < Date.now());
-    pastEvents.reverse();
+    upCommingEvents.reverse();
 
     useEffect(() => {
         dispatch(getGroupIdThunk(groupId))
@@ -59,7 +59,7 @@ function GroupShow() {
                     {user && user.id === group.organizerId &&
                         <div className='organizer button'>
                             <button className='create-events'><NavLink to={`/groups/${groupId}/events/new`}>Create an event</NavLink></button>
-                            <button className= 'update'>Update</button>
+                            <button className= 'update'><NavLink to={`/groups/${groupId}/edit`}>Update</NavLink></button>
                             <button className = 'delete'>Delete</button>
                         </div>
                     }
