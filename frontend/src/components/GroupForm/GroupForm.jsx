@@ -1,7 +1,7 @@
 import './GroupForm.css'
 import {useState,useEffect} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import { createGroupThunk } from '../../store/creategroup'
+import { createGroupThunk, updateGroupThunk } from '../../store/creategroup'
 import {useNavigate} from 'react-router-dom'
 import { csrfFetch } from '../../store/csrf';
 
@@ -21,7 +21,7 @@ function GroupForm({props}){
 
     useEffect(()=>{
         if(!user) navigate('/')
-        if(group && user.id != group.organizerId) navigate ('/')
+        if(group?.organizerId && user.id != group.organizerId) navigate ('/')
 
         setLocation(group?.city? `${group.city},${group.state}`:'')
         setName(group?.name? group.name:'')
@@ -29,7 +29,7 @@ function GroupForm({props}){
         setIsPrivate(group?.private !== 'undefined'? group?.private:'')
         setType(group?.type? group.type:'')
         setImgUrl(group?.GroupImages?.length? group.GroupImages[0].url:'')
-    },[group])
+    },[group,navigate,user])
 
 
     const createGroupImage = async (groupId,imgObj)=>{
@@ -78,11 +78,31 @@ function GroupForm({props}){
                 preview:true
             }
             let groupId;
-            (dispatch(createGroupThunk(reqObj)))
-                .then((group)=>{
-                    groupId = group.id;
-                    return createGroupImage(group.id,imgObj)
-                }).then(()=>{navigate(`/groups/${groupId}`)})
+            if(!group){
+                (dispatch(createGroupThunk(reqObj)))
+                    .then((group)=>{
+                        groupId = group.id;
+                        return createGroupImage(group.id,imgObj)
+                    }).then(()=>{navigate(`/groups/${groupId}`)})
+
+            }else{
+                (dispatch(updateGroupThunk(group.id,reqObj)))
+                .then(data=>{
+                    if(data.errors){
+                        setFormErr(true);
+                        setErrObj({
+                            location:`${data.errors.city}, ${data.errors.state}`,
+                            name:data.errors.name,
+                            description:data.errors.about
+                        })
+                    }else{
+                        return data
+                    }
+                })
+                .then((data)=>{
+                    if(data) navigate(`/groups/${data.id}`)
+                })
+            }
         }
     }
     return(
