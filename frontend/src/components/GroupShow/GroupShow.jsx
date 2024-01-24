@@ -5,6 +5,8 @@ import { useEffect } from 'react';
 import { getEventsThunk } from '../../store/event';
 import EventDetails from '../EventDetails';
 import { getGroupIdThunk } from '../../store/groupdetail';
+import OpenModalButton from '../OpenModalButton';
+import GroupDelete from '../GroupDelete';
 
 function GroupShow() {
     const { groupId } = useParams();
@@ -60,7 +62,12 @@ function GroupShow() {
                         <div className='organizer button'>
                             <button className='create-events'><NavLink to={`/groups/${groupId}/events/new`}>Create an event</NavLink></button>
                             <button className= 'update'><NavLink to={`/groups/${groupId}/edit`}>Update</NavLink></button>
-                            <button className = 'delete'>Delete</button>
+                            <button className = 'delete'>
+                                <OpenModalButton
+                                modalComponent = {<GroupDelete/>}
+                                buttonText = 'Delete'
+                                />
+                            </button>
                         </div>
                     }
 

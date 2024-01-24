@@ -26,7 +26,7 @@ export const createGroupThunk = (newGroup)=>async (dispatch)=>{
         method:'POST',
         body:JSON.stringify(newGroup)
     })
-    const data = await response.json()
+    const data = await response.json({})
 
     if(response.ok){
         dispatch(createGroup(data))

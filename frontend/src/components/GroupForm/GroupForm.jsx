@@ -77,13 +77,27 @@ function GroupForm({props}){
                 url:imgUrl,
                 preview:true
             }
-            let groupId;
+
             if(!group){
+                let groupId;
                 (dispatch(createGroupThunk(reqObj)))
-                    .then((group)=>{
-                        groupId = group.id;
-                        return createGroupImage(group.id,imgObj)
-                    }).then(()=>{navigate(`/groups/${groupId}`)})
+                .then(data=>{
+                    if(data.errors){
+                        setFormErr(true)
+                        setErrObj({
+                            location:`${data.errors.city}, ${data.errors.state}`,
+                            name:data.errors.name,
+                            description:data.errors.about
+                        })
+                    }else{
+                        return data
+                    }
+                })
+                    .then((newGroup)=>{
+                        groupId = newGroup.id
+                        return createGroupImage(newGroup.id,imgObj)
+                    })
+                    .then(()=>{navigate(`/groups/${groupId}`)})
 
             }else{
                 (dispatch(updateGroupThunk(group.id,reqObj)))
