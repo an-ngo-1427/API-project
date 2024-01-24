@@ -9,11 +9,12 @@ function UpdateGroup(){
     const dispatch = useDispatch()
     const group = useSelector(state=>state.currGroup);
 
+
     useEffect(()=>{
         dispatch(getGroupIdThunk(groupId))
     },[dispatch,groupId])
     return (
-        <GroupForm group = {group}/>
+        <GroupForm props = {{group}}/>
     )
 }
 

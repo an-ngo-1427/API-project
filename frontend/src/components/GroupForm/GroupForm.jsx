@@ -1,12 +1,13 @@
 import './GroupForm.css'
 import {useState,useEffect} from 'react'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import { createGroupThunk } from '../../store/creategroup'
 import {useNavigate} from 'react-router-dom'
 import { csrfFetch } from '../../store/csrf';
 
-function GroupForm({group}){
-
+function GroupForm({props}){
+    const group = props?.group;
+    const user = useSelector(state=>state.session.user)
     const dispatch = useDispatch();
     const navigate = useNavigate()
     const [location,setLocation] = useState("");
@@ -19,6 +20,8 @@ function GroupForm({group}){
     const [formErr,setFormErr] = useState(false);
 
     useEffect(()=>{
+        if(!user) navigate('/')
+        if(group && user.id != group.organizerId) navigate ('/')
 
         setLocation(group?.city? `${group.city},${group.state}`:'')
         setName(group?.name? group.name:'')

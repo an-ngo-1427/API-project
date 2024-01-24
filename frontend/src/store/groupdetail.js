@@ -18,7 +18,7 @@ export const getGroupIdThunk = (groupId)=>async (dispatch)=>{
         dispatch(getGroupId(data));
         return data;
     }
-    console.log( 'group',data)
+
     return data
 }
 
