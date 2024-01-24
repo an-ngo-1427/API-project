@@ -12,7 +12,7 @@ function GroupList() {
     const events = useSelector(state => state.events)
 
     const groupArr = Object.values(groups)
-    if(groupArr.length) console.log(groupArr)
+
     useEffect(() => {
         dispatch(getGroupsThunk());
         dispatch(getEventsThunk());

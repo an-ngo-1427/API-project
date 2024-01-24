@@ -13,7 +13,7 @@ function EventList() {
         if (Date.parse(a.startDate) < Date.parse(b.startDate)) return 1
         else return -1
     })
-    console.log(eventsArr)
+
     let pastEvents = eventsArr.filter(event=>Date.parse(event.startDate) < Date.now())
     let commingEvents = eventsArr.filter(event=>Date.parse(event.startDate) > Date.now())
 

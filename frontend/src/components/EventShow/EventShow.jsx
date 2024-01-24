@@ -22,8 +22,7 @@ function EventShow() {
     let data = useRef(null);
     let organizer;
     Object.values(event).length ? organizer = event.Group.Organizer : organizer = '';
-    if (Object.values(event).length) console.log(event)
-    if (Object.values(organizer).length) console.log(organizer)
+
     useEffect(() => {
         data.current = dispatch(getEventIdThunk(eventId));
     }, [dispatch,eventId])

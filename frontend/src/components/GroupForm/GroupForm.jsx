@@ -1,19 +1,14 @@
 import './GroupForm.css'
 import {useState,useEffect} from 'react'
-import {useDispatch, useSelector} from 'react-redux'
+import {useDispatch} from 'react-redux'
 import { createGroupThunk } from '../../store/creategroup'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import { csrfFetch } from '../../store/csrf';
-import { getGroupIdThunk } from '../../store/groupdetail'
-function GroupForm(){
+
+function GroupForm({group}){
+
     const dispatch = useDispatch();
     const navigate = useNavigate()
-
-    const{groupId} = useParams();
-
-    let group = useSelector(state=>state.currGroup)
-    // if(groupId) currGroup = await dispatch(getGroupIdThunk(groupId));
-    // const [isGroup,setIsGroup] = useState(!Object.values(group).length)
     const [location,setLocation] = useState("");
     const [name,setName] = useState('');
     const [description,setDescription] = useState('');
@@ -22,21 +17,16 @@ function GroupForm(){
     const [imgUrl,setImgUrl] = useState('');
     const [errObj,setErrObj] = useState({});
     const [formErr,setFormErr] = useState(false);
-    const user = useSelector(state=>state.session.user)
-    console.log(groupId,group)
-    useEffect(()=>{
-        if(!user) navigate('/')
-        if(group.organizerId && user.id !== group.organizerId) navigate('/')
-        setLocation(group.city && groupId == group.id? `${group.city},${group.state}`:'')
-        setName(group.name? group.name:'')
-        setDescription(group.about? group.about:'')
-        setIsPrivate(group.private? group.private:'')
-        setType(group.type? group.type:'')
-        setImgUrl(group.GroupImages?.length? group.GroupImages[0].url:'')
-        if(groupId && !Object.values(group).length) dispatch(getGroupIdThunk(groupId))
-        console.log('entered')
-    },[dispatch,group])
 
+    useEffect(()=>{
+
+        setLocation(group?.city? `${group.city},${group.state}`:'')
+        setName(group?.name? group.name:'')
+        setDescription(group?.about? group.about:'')
+        setIsPrivate(group?.private !== 'undefined'? group?.private:'')
+        setType(group?.type? group.type:'')
+        setImgUrl(group?.GroupImages?.length? group.GroupImages[0].url:'')
+    },[group])
 
 
     const createGroupImage = async (groupId,imgObj)=>{
@@ -47,8 +37,6 @@ function GroupForm(){
         const data = await response.json()
         return data
     }
-
-    // updating group
 
 
     useEffect(()=>{
@@ -96,7 +84,7 @@ function GroupForm(){
     }
     return(
         <div>
-        <h1>{groupId? `Update your group`:`Start a New Group`}</h1>
+        <h1>{group? `Update your group`:`Start a New Group`}</h1>
         <form>
             <div className='form-section'>
                 <h3>{`First, set your group's location.`}</h3>
@@ -176,7 +164,7 @@ Feel free to get creative! You can edit this later if you change your mind.`}</p
                 <button
                     type='submit'
                     onClick={(e)=>{handleSubmit(e)}}
-                >{!groupId? `Create group`:'Update group'}</button>
+                >{!group? `Create group`:'Update group'}</button>
             </div>
         </form>
 

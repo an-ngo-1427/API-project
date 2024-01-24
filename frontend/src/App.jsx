@@ -16,6 +16,7 @@ import GroupForm from './components/GroupForm/GroupForm';
 import { useSelector } from 'react-redux'
 import {NavLink} from 'react-router-dom'
 import EventForm from './components/EventForm';
+import UpdateGroup from './components/UpdateGroup';
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -72,7 +73,7 @@ const router = createBrowserRouter([
       },
       {
         path:'/groups/:groupId/edit',
-        element:<GroupForm/>
+        element:<UpdateGroup/>
       },
       {
         path: '/events',
