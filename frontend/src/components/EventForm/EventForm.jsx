@@ -51,7 +51,7 @@ function EventForm(){
                 (!imgUrl.includes('.jpeg',imgUrl.length-5))&&
                 (!imgUrl.includes('.jpg',imgUrl.length-5))) err.imgUrl = "Image URL must end in .png, .jpg, or .jpeg"
         if(description.length < 30) err.description = "Please include at least 30 characters"
-
+        console.log(description)
         setErrObj(err);
     },[name,type,isPrivate,price,startDate,endDate,imgUrl,description])
 
@@ -77,11 +77,29 @@ function EventForm(){
             }
             let newEventId;
             createEvent(eventObj)
-                .then((event)=>{
-                    newEventId = event.id
-                    return createEventImage(event.id,imageObj);
+                .then(event=>{
+                    console.log(event);
+                    if(event.errors){
+                        setFormErr(true)
+                        setErrObj({
+                            name:event.errors.name,
+                            type:event.errors.type,
+                            price:event.errors.price,
+                            startDate:event.errors.startDate,
+                            endDate: event.errors.endDate
+                        })
+                    }else{
+                        return event
+                    }
+
                 })
-                .then(()=>{navigate(`/events/${newEventId}`)});
+                .then((event)=>{
+                    if(event){
+                        newEventId = event.id
+                        return createEventImage(event.id,imageObj);
+                    }
+                })
+                .then((success)=>{if(success){navigate(`/events/${newEventId}`)}});
 
         }
 
