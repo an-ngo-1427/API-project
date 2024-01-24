@@ -39,7 +39,7 @@ function HomePage() {
                 </div>
                 <div className='item'>
                     <img className='main-item-image' src={groupImg}></img>
-                    <NavLink  to='/groups/new' className={!sessionUser ? 'disabledLink' : ""} >Start a new group</NavLink>
+                    <NavLink replace={true} to='/groups/new' className={!sessionUser ? 'disabledLink' : ""} >Start a new group</NavLink>
                 </div>
             </div>
         </div>

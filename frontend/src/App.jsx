@@ -72,7 +72,7 @@ const router = createBrowserRouter([
       },
       {
         path:'/groups/:groupId/edit',
-        element:<GroupForm />
+        element:<GroupForm/>
       },
       {
         path: '/events',

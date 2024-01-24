@@ -23,18 +23,19 @@ function GroupForm(){
     const [errObj,setErrObj] = useState({});
     const [formErr,setFormErr] = useState(false);
     const user = useSelector(state=>state.session.user)
-
+    console.log(groupId,group)
     useEffect(()=>{
         if(!user) navigate('/')
         if(group.organizerId && user.id !== group.organizerId) navigate('/')
-        setLocation(group.city ? `${group.city},${group.state}`:'')
+        setLocation(group.city && groupId == group.id? `${group.city},${group.state}`:'')
         setName(group.name? group.name:'')
         setDescription(group.about? group.about:'')
         setIsPrivate(group.private? group.private:'')
         setType(group.type? group.type:'')
         setImgUrl(group.GroupImages?.length? group.GroupImages[0].url:'')
         if(groupId && !Object.values(group).length) dispatch(getGroupIdThunk(groupId))
-    },[groupId,dispatch,group])
+        console.log('entered')
+    },[dispatch,group])
 
 
 
