@@ -11,7 +11,7 @@ function EventDetails({ event }) {
     return (
         <div onClick={clickHandle} className='event-details'>
             <div className='event-image'>
-                <img src='https://www.rollingstone.com/wp-content/uploads/2023/05/Finding-Nemo-Anniversary.jpg?w=1581&h=1054&crop=1' />
+                <img src={event.previewImage} alt='no preview image' />
             </div>
             <div className='event-description'>
                 <div className='add-info'>

@@ -9,6 +9,7 @@ import { MdOutlinePriceCheck } from "react-icons/md";
 import { GrLocationPin } from "react-icons/gr";
 import OpenModalButton from '../OpenModalButton';
 import EventDelete from '../EventDelete/EventDelete';
+import { getGroupIdThunk } from '../../store/groupdetail';
 
 function EventShow() {
     const dispatch = useDispatch()
@@ -21,16 +22,19 @@ function EventShow() {
     const timeStart = event.startDate?.substring(11, 16);
     const dayEnd = event.endDate?.substring(0, 10);
     const timeEnd = event.endDate?.substring(11, 16);
+    const currGroup = useSelector(state=>state.currGroup);
 
     let data = useRef(null);
     let organizer;
     Object.values(event).length ? organizer = event.Group.Organizer : organizer = '';
-
+    console.log(currGroup)
     useEffect(() => {
         data.current = dispatch(getEventIdThunk(eventId));
         if(deleted){
             navigate(`/groups/${event.Group.id}`)
         }
+        dispatch(getGroupIdThunk(event?.Group?.id))
+
     }, [dispatch,eventId,deleted,event?.Group?.id,navigate])
 
     if (data.current?.message) return <h1>{data.current.message}</h1>
@@ -49,10 +53,12 @@ function EventShow() {
                     <span>{`Hosted By ${organizer.firstName} ${organizer.lastName}`}</span>
                 </div>
                 <div className='event-overview'>
-                    <img src='https://www.rollingstone.com/wp-content/uploads/2023/05/Finding-Nemo-Anniversary.jpg?w=1581&h=1054&crop=1'></img>
+                    <div>
+                        {event.EventImages.map(image=><img key={image.id} src = {`${image.url}`}/>)}
+                    </div>
                     <div>
                         <div onClick={handleClick} className='event-group'>
-                            <img src='https://www.rollingstone.com/wp-content/uploads/2023/05/Finding-Nemo-Anniversary.jpg?w=1581&h=1054&crop=1'></img>
+                            <img alt='no images' src={currGroup.GroupImages?.length? currGroup.GroupImages[0]:''}/>
                             <div className='group-name'>
                                 <h3>{event.Group.name}</h3>
                                 <span>{event.Group.private ? 'Private' : 'Public'}</span>
