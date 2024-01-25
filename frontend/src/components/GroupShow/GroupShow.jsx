@@ -1,7 +1,7 @@
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import './GroupShow.css'
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getEventsThunk } from '../../store/event';
 import EventDetails from '../EventDetails';
 import { getGroupIdThunk } from '../../store/groupdetail';
@@ -10,19 +10,20 @@ import GroupDelete from '../GroupDelete';
 
 function GroupShow() {
     const { groupId } = useParams();
-
+    const [deleted,setDeleted] = useState(false)
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const group = useSelector(state => state.currGroup)
     const user = useSelector(state=>state.session.user)
     const events = useSelector(state => state.events)
     const eventsArr = Object.values(events);
+
     eventsArr.sort((a, b) => {
         if (Date.parse(a.startDate) < Date.parse(b.startDate)) return 1
         else return -1
 
 
     })
-
 
     const groupEvents = eventsArr.filter(event => event.groupId === group.id)
 
@@ -36,6 +37,11 @@ function GroupShow() {
         dispatch(getGroupIdThunk(groupId))
         dispatch(getEventsThunk())
     }, [dispatch,groupId])
+
+    useEffect(()=>{
+        if(deleted) navigate('/groups')
+        console.log(deleted)
+    },[deleted,navigate])
 
     if (!Object.values(group).length) {
 
@@ -64,8 +70,9 @@ function GroupShow() {
                             <button className= 'update'><NavLink to={`/groups/${groupId}/edit`}>Update</NavLink></button>
                             <button className = 'delete'>
                                 <OpenModalButton
-                                modalComponent = {<GroupDelete/>}
+                                modalComponent = {<GroupDelete props = {{group,navigate,setDeleted}}/>}
                                 buttonText = 'Delete'
+
                                 />
                             </button>
                         </div>

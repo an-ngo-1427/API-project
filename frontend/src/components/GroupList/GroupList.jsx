@@ -12,10 +12,11 @@ function GroupList() {
     const events = useSelector(state => state.events)
 
     const groupArr = Object.values(groups)
-
+    console.log('group',groups)
     useEffect(() => {
-        dispatch(getGroupsThunk());
-        dispatch(getEventsThunk());
+        dispatch(getGroupsThunk())
+        .then(()=>{dispatch(getEventsThunk())})
+        console.log('entered')
     }, [dispatch])
     return (
         <div>
