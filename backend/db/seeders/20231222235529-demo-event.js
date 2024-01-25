@@ -37,8 +37,8 @@ module.exports = {
         type:"Online",
         capacity:32,
         price:20.1,
-        startDate: '2024-1-7',
-        endDate: '2024-10-12'
+        startDate: '2024-1-1',
+        endDate: '2024-1-2'
       },
       {
         venueId:1,
@@ -48,8 +48,41 @@ module.exports = {
         type:"In Person",
         capacity:32,
         price:20.1,
-        startDate: '2024-1-7',
-        endDate: '2024-10-12'
+        startDate: '2024-3-7',
+        endDate: '2024-3-9'
+      },
+      {
+        venueId:1,
+        groupId:1,
+        name:"Catching Big Fish",
+        description:"playing hide and seek with Mr.Johanson in his backyard in the middle of a large sandy pit",
+        type:"Online",
+        capacity:20,
+        price:0,
+        startDate: '2024-3-20',
+        endDate: '2024-3-25'
+      },
+      {
+        venueId:1,
+        groupId:2,
+        name:"Aquarium Trip",
+        description:"Hanging out with Darla Sherman on the beach. Playing with the fish in the ocean and annoying them",
+        type:"In Person",
+        capacity:32,
+        price:20.1,
+        startDate: '2024-5-7',
+        endDate: '2024-5-11'
+      },
+      {
+        venueId:1,
+        groupId:1,
+        name:"Swimming in the Ocean",
+        description:"Hanging out with Darla Sherman on the beach. Playing with the fish in the ocean and annoying them",
+        type:"In Person",
+        capacity:32,
+        price:20.1,
+        startDate: '2024-5-10',
+        endDate: '2024-5-15'
       }
     ],{validate:true})
   },

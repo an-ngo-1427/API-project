@@ -39,7 +39,7 @@ function GroupShow() {
     }, [dispatch,groupId])
 
     useEffect(()=>{
-        if(deleted) navigate('/groups')
+        if(deleted) navigate('/groups',{replace:true})
 
     },[deleted,navigate])
 

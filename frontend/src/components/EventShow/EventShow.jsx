@@ -31,7 +31,7 @@ function EventShow() {
     useEffect(() => {
         data.current = dispatch(getEventIdThunk(eventId));
         if(deleted){
-            navigate(`/groups/${event.Group.id}`)
+            navigate(`/groups/${event.Group.id}`,{replace:true})
         }
         dispatch(getGroupIdThunk(event?.Group?.id))
 

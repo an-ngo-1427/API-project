@@ -7,6 +7,7 @@ function GroupDetails({props}){
     const events = props.events;
     const eventArr = Object.values(events)
     let groupEvents = eventArr.filter(event=>event.groupId === group.id)
+    console.log(group)
     const clickHandle = ()=>{
         navigate(`/groups/${group.id}`)
     }
