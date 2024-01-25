@@ -7,12 +7,11 @@ function GroupDetails({props}){
     const events = props.events;
     const eventArr = Object.values(events)
     let groupEvents = eventArr.filter(event=>event.groupId === group.id)
-    console.log(group)
     const clickHandle = ()=>{
         navigate(`/groups/${group.id}`)
     }
     return(
-        <div onClick={clickHandle} className = 'group-detail'>
+        <div onClick={clickHandle} className = 'item-detail'>
             <img alt={'no preview picture'} src={group.previewImage}/>
             <div className = 'details'>
                 <h2>{group.name}</h2>

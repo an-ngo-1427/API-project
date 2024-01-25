@@ -9,11 +9,11 @@ function EventDetails({ event }) {
         navigate(`/events/${event.id}`)
     }
     return (
-        <div onClick={clickHandle} className='event-details'>
-            <div className='event-image'>
+        <div onClick={clickHandle} className='item-detail'>
+
                 <img src={event.previewImage} alt='no preview image' />
-            </div>
-            <div className='event-description'>
+
+            <div className='details'>
                 <div className='add-info'>
                     <span>{day}</span>
                     <span>.</span>

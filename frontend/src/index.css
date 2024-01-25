@@ -6,7 +6,8 @@
     padding-left: 50px;
     padding-right: 50px;
     align-items: center;
-    height:100px;
+    height: 100px;
+    width: 100%;
 
 
 }
@@ -33,19 +34,47 @@
     gap:35px;
 }
 
+.user-list>button{
+    width:150px;
+    font-family: 'Poor Story', system-ui;
+    font-size: xx-large;
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	outline: inherit;
+
+}
+
 .page{
     display: flex;
     flex-direction: column;
+    max-width: fit-content;
 }
 
 .head-session{
     display: flex;
     flex-direction: row;
-    gap:35px;
+    gap:50px;
     align-items: center;
 }
 
 a{
     text-decoration: none;
     color:inherit;
+}
+
+body{
+    font-family: 'Poor Story', system-ui;
+    font-size: x-large;
+}
+
+#root{
+    display: flex;
+    justify-content: center;
+}
+
+.home-page{
+    padding-right: 147px;
 }

@@ -27,7 +27,7 @@ function EventShow() {
     let data = useRef(null);
     let organizer;
     Object.values(event).length ? organizer = event.Group.Organizer : organizer = '';
-    console.log(currGroup)
+
     useEffect(() => {
         data.current = dispatch(getEventIdThunk(eventId));
         if(deleted){
@@ -44,8 +44,9 @@ function EventShow() {
         navigate(`/groups/${event.groupId}`)
     }
     return (
+        <div>
+        <NavLink className='head-links' to="/events">{`< Events`}</NavLink>
         <div className='event-show'>
-            <NavLink to="/events">{`< Events`}</NavLink>
             <i className='material-icons'>icon</i>
             <div className='event-header'>
                 <div className='event-name'>
@@ -53,7 +54,7 @@ function EventShow() {
                     <span>{`Hosted By ${organizer.firstName} ${organizer.lastName}`}</span>
                 </div>
                 <div className='event-overview'>
-                    <div>
+                    <div className='group-pic'>
                         {event.EventImages.map(image=><img key={image.id} src = {`${image.url}`}/>)}
                     </div>
                     <div>
@@ -97,6 +98,7 @@ function EventShow() {
                 <p>{event.description}</p>
             </div>
 
+        </div>
         </div>
     )
 }

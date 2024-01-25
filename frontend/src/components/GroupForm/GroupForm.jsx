@@ -121,7 +121,7 @@ function GroupForm({props}){
     }
     return(
         <div>
-        <h1>{group? `Update your group`:`Start a New Group`}</h1>
+        <h1 className='form-title'>{group? `Update your group`:`Start a New Group`}</h1>
         <form>
             <div className='form-section'>
                 <h3>{`First, set your group's location.`}</h3>
@@ -199,6 +199,7 @@ Feel free to get creative! You can edit this later if you change your mind.`}</p
                     {formErr && <div style={{color:'red'}}>{errObj.imgUrl}</div>}
                 </div>
                 <button
+                    className='form-button'
                     type='submit'
                     onClick={(e)=>{handleSubmit(e)}}
                 >{!group? `Create group`:'Update group'}</button>

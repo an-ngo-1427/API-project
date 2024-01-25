@@ -48,8 +48,8 @@ function GroupShow() {
         return null
     }
     return (
-        <div>
-            <NavLink to={`/groups`}>{`< Groups`}</NavLink>
+        <div className= 'show-page'>
+            <NavLink className='head-links' to={`/groups`}>{`< Groups`}</NavLink>
             <div className='group-header'>
                 <div className='group-pic'>
                     {group.GroupImages.map(image=><img key={image.id} src ={image.url}/>)}
@@ -62,7 +62,7 @@ function GroupShow() {
                         <span>.</span>
                         <span>{group.private ? 'Private' : ''}</span>
                     </div>
-                    <div>{`Organized by ${group?.Organizer?.firstName} ${group?.Organizer?.lastName}`}</div>
+                    <div>{`Organized by: ${group?.Organizer?.firstName} ${group?.Organizer?.lastName}`}</div>
                     {user && user.id !== group.organizerId && <button onClick={() => { window.alert('feature comming soon') }} className='join-group'>Join this group</button>}
                     {user && user.id === group.organizerId &&
                         <div className='organizer button'>
@@ -84,16 +84,16 @@ function GroupShow() {
             <div className='group-detail-body'>
                 <div className='group-description'>
                     <div className='organinzer'>
-                        <h2>Organizer</h2>
+                        <h3>Organizer:</h3>
                         <span>{group.Organizer.firstName} {group.Organizer.lastName}</span>
 
                     </div>
                     <div className='detail-about'>
-                        <h3>What we are about</h3>
+                        <h3>What we are about:</h3>
                         <p>{group.about}</p>
                     </div>
                 </div>
-                <h2>Events</h2>
+                <h2 className = 'event-title'>Events</h2>
                 <div className='upcomming'>
                     <h3>{`Upcomming events (${upCommingEvents.length})`}</h3>
                     {upCommingEvents.map(event => <EventDetails key={event.id} event={event} />)}

@@ -4,7 +4,10 @@
     gap:30px;
     justify-content: center;
     padding: 15px;
-    width: 100%;
+    width: 1300px;
+    border-bottom: 3px solid black;
+    margin:auto;
+
 }
 
 .over-view{
@@ -14,6 +17,7 @@
     gap:20px;
 }
 
+
 .over-view>h2 {
     font-size: 55px;
     margin-top:12px;
@@ -21,13 +25,20 @@
 }
 
 .over-view>button{
-    width:50%
+    width: 60%;
+    margin: 30px 15px 9px 132px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: rgba(106, 106, 244, 0.642);
+
 }
 
 
 .group-detail-body{
     padding:50px 150px 50px;
-    font-size: 20px;
+    margin-left:150px;
 }
 
 .group-description{
@@ -37,5 +48,22 @@
 }
 
 .group-pic>img{
-    width:350px;
+    width:50%;
+    height:150px;
+
+}
+
+.group-pic{
+    max-width: 700px;
+    padding:20px;
+}
+
+.group-detail-body>div{
+margin: auto;
+}
+
+.event-title{
+    border-top: 3px solid black;
+    width:1000px;
+    padding:15px;
 }

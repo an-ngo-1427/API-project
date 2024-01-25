@@ -2,6 +2,10 @@
   position: absolute;
 }
 
+.profile-dropdown>li>button{
+  width:150px;
+  font-size: x-large;
+}
 .hidden {
   display: none;
 }
