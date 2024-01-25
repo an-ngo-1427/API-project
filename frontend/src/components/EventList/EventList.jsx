@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 function EventList() {
     const dispatch = useDispatch()
     const events = useSelector(state => state.events);
+
     let eventsArr = Object.values(events);
     eventsArr.sort((a, b) => {
         if (Date.parse(a.startDate) < Date.parse(b.startDate)) return 1
@@ -22,6 +23,7 @@ function EventList() {
 
     useEffect(() => {
         dispatch(getEventsThunk());
+
     }, [dispatch])
     return (
         <div>

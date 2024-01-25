@@ -40,7 +40,7 @@ function GroupShow() {
 
     useEffect(()=>{
         if(deleted) navigate('/groups')
-        console.log(deleted)
+
     },[deleted,navigate])
 
     if (!Object.values(group).length) {

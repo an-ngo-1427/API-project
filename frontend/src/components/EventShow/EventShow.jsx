@@ -3,17 +3,20 @@ import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import './EventShow.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { getEventIdThunk } from '../../store/eventdetail';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef,useState } from 'react';
 import { FaRegClock } from "react-icons/fa";
 import { MdOutlinePriceCheck } from "react-icons/md";
 import { GrLocationPin } from "react-icons/gr";
+import OpenModalButton from '../OpenModalButton';
+import EventDelete from '../EventDelete/EventDelete';
 
 function EventShow() {
     const dispatch = useDispatch()
     const { eventId } = useParams()
     const event = useSelector(state => state.currEvent);
     const navigate = useNavigate()
-
+    const [deleted,setDeleted] = useState(false)
+    const user = useSelector(state=>state.session.user);
     const dayStart = event.startDate?.substring(0, 10);
     const timeStart = event.startDate?.substring(11, 16);
     const dayEnd = event.endDate?.substring(0, 10);
@@ -25,7 +28,10 @@ function EventShow() {
 
     useEffect(() => {
         data.current = dispatch(getEventIdThunk(eventId));
-    }, [dispatch,eventId])
+        if(deleted){
+            navigate(`/groups/${event.Group.id}`)
+        }
+    }, [dispatch,eventId,deleted,event?.Group?.id,navigate])
 
     if (data.current?.message) return <h1>{data.current.message}</h1>
     if (!Object.values(event).length) return null;
@@ -68,6 +74,12 @@ function EventShow() {
                             <div className='event-info-item'>
                                 <div className='icon'><GrLocationPin /></div>
                                 <div>{event.type}</div>
+
+                                {organizer.id === user?.id && <OpenModalButton
+                                    modalComponent={<EventDelete props ={{event,setDeleted}}/>}
+                                    buttonText='Delete'
+                                />}
+
 
                             </div>
                         </div>
