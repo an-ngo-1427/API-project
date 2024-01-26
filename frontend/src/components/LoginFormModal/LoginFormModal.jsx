@@ -11,17 +11,17 @@ function LoginFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
   const [errObj,setErrobj] = useState({});
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
-      .then(closeModal)
-      .catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
-      });
+    const res = await dispatch(sessionActions.login({ credential, password }))
+
+    if(res.errors){
+      setErrors(res.errors)
+    }else{
+      closeModal();
+    }
+
   };
 
   const demoLogin = ()=>{
@@ -53,6 +53,7 @@ function LoginFormModal() {
             onChange={(e) => setCredential(e.target.value)}
             required
             />
+
         </label>
         <label>
           Password
@@ -64,7 +65,7 @@ function LoginFormModal() {
             required
             />
         </label>
-        {errors.message && <p>{errors.message}</p>}
+        {errors.message && <p style={{color:'red'}}>{errors.message}</p>}
         <button disabled={Object.values(errObj).length ? true:false} type="submit">Log In</button>
       </form>
       <span onClick={demoLogin} className='demo'> login as demo user</span>

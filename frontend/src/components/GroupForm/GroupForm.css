@@ -39,3 +39,7 @@ form{
     font-size: inherit;
     background-color: rgba(106, 106, 244, 0.642);
 }
+
+.form-list>li{
+    list-style: decimal;
+}

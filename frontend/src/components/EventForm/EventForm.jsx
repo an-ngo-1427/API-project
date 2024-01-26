@@ -51,7 +51,6 @@ function EventForm(){
                 (!imgUrl.includes('.jpeg',imgUrl.length-5))&&
                 (!imgUrl.includes('.jpg',imgUrl.length-5))) err.imgUrl = "Image URL must end in .png, .jpg, or .jpeg"
         if(description.length < 30) err.description = "Please include at least 30 characters"
-        console.log(description)
         setErrObj(err);
     },[name,type,isPrivate,price,startDate,endDate,imgUrl,description])
 
@@ -78,7 +77,6 @@ function EventForm(){
             let newEventId;
             createEvent(eventObj)
                 .then(event=>{
-                    console.log(event);
                     if(event.errors){
                         setFormErr(true)
                         setErrObj({

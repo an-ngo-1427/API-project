@@ -22,13 +22,14 @@ function GroupForm({props}){
     useEffect(()=>{
         if(!user) navigate('/')
         if(group?.organizerId && user.id != group.organizerId) navigate ('/')
-
         setLocation(group?.city? `${group.city},${group.state}`:'')
         setName(group?.name? group.name:'')
         setDescription(group?.about? group.about:'')
-        setIsPrivate(group?.private !== 'undefined'? group?.private:'')
+
+        if(group) setIsPrivate(group.private === true? true:false)
         setType(group?.type? group.type:'')
         setImgUrl(group?.GroupImages?.length? group.GroupImages[0].url:'')
+
     },[group,navigate,user])
 
 
@@ -48,14 +49,14 @@ function GroupForm({props}){
         if(location.length <=0) err.location = 'location is required'
         if(name.length <= 0) err.name = 'name is required'
         if(description.length < 50) err.description = 'Description must be at least 50 characters long'
-        if(!isPrivate) err.isPrivate = 'Visibility Type is required'
+        if(isPrivate?.length <= 0){ err.isPrivate = 'Visibility Type is required'}
         if(!type) err.type = 'Group Type is required'
         if(
             (!imgUrl.includes('.png',imgUrl.length-5))&&
             (!imgUrl.includes('.jpeg',imgUrl.length-5))&&
             (!imgUrl.includes('.jpg',imgUrl.length-5))) err.imgUrl = "Image URL must end in .png, .jpg, or .jpeg"
 
-        setErrObj(err);
+            setErrObj(err);
     },[location,name,description,isPrivate,type,imgUrl])
 
     const handleSubmit = (e)=>{
@@ -83,6 +84,7 @@ function GroupForm({props}){
                 (dispatch(createGroupThunk(reqObj)))
                 .then(data=>{
                     if(data.errors){
+
                         setFormErr(true)
                         setErrObj({
                             location:`${data.errors.city}, ${data.errors.state}`,
@@ -150,7 +152,7 @@ Feel free to get creative! You can edit this later if you change your mind.`}</p
             <div className = 'form-section'>
                 <h3>{`Now describe what your group will be about`}</h3>
                 <p>{`People will see this when we promote your group, but you'll be able to add to it later, too.`}</p>
-                <ol>
+                <ol className = 'form-list'>
                     <li>{`What's the purpose of the group?`}</li>
                     <li>{`Who should join?`}</li>
                     <li>{`What will you do at your events?`}</li>

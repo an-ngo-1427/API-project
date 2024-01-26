@@ -39,6 +39,7 @@ function EventShow() {
 
     if (data.current?.message) return <h1>{data.current.message}</h1>
     if (!Object.values(event).length) return null;
+    if(!currGroup) return null;
 
     const handleClick = () => {
         navigate(`/groups/${event.groupId}`)
@@ -59,7 +60,7 @@ function EventShow() {
                     </div>
                     <div>
                         <div onClick={handleClick} className='event-group'>
-                            <img alt='no images' src={currGroup.GroupImages?.length? currGroup.GroupImages[0]:''}/>
+                            <img alt='no images' src={currGroup.GroupImages?.length? currGroup.GroupImages[0].url:''}/>
                             <div className='group-name'>
                                 <h3>{event.Group.name}</h3>
                                 <span>{event.Group.private ? 'Private' : 'Public'}</span>
@@ -69,8 +70,8 @@ function EventShow() {
                             <div className='event-info-item'>
                                 <span className='icon'><FaRegClock /></span>
                                 <div>
-                                    <div>{`START: ${dayStart} . ${timeStart}`}</div>
-                                    <div>{`END: ${dayEnd} . ${timeEnd}`}</div>
+                                    <div>{`START: ${dayStart} · ${timeStart}`}</div>
+                                    <div>{`END: ${dayEnd} · ${timeEnd}`}</div>
 
                                 </div>
                             </div>

@@ -25,11 +25,12 @@ function SignupFormModal() {
     if(!password || password.length <6) setErrobj(true)
     if(!confirmPassword) setErrobj(true)
   },[email,username,firstName,lastName,password,confirmPassword])
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    setErrors({})
     if (password === confirmPassword) {
       setErrors({});
-      return dispatch(
+      const data = await dispatch(
         sessionActions.signup({
           email,
           username,
@@ -38,17 +39,24 @@ function SignupFormModal() {
           password
         })
       )
-        .then(closeModal)
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data?.errors) {
-            setErrors(data.errors);
-          }
-        });
+      if(data.errors){
+        setErrors(data.errors)
+      }else{
+        closeModal();
+      }
+        // .then(closeModal)
+        // .catch(async (res) => {
+        //   const data = await res.json();
+        //   if (data?.errors) {
+        //     setErrors(data.errors);
+        //   }
+        // });
+    }else{
+      setErrors({
+        confirmPassword: "Confirm Password field must be the same as the Password field"
+      });
+
     }
-    return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
-    });
   };
 
   return (
@@ -66,7 +74,7 @@ function SignupFormModal() {
             placeholder='Email'
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+        {errors.email && <p style={{color:'red'}}>{errors.email}</p>}
         <label>
           Username
           <input
@@ -78,7 +86,7 @@ function SignupFormModal() {
             placeholder='Username'
           />
         </label>
-        {errors.username && <p>{errors.username}</p>}
+        {errors.username && <p style={{color:'red'}}>{errors.username}</p>}
         <label>
           First Name
           <input
@@ -90,7 +98,7 @@ function SignupFormModal() {
             placeholder='First Name'
           />
         </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
+        {errors.firstName && <p style={{color:'red'}}>{errors.firstName}</p>}
         <label>
           Last Name
           <input
@@ -102,7 +110,7 @@ function SignupFormModal() {
             placeholder='Last Name'
           />
         </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
+        {errors.lastName && <p style={{color:'red'}}>{errors.lastName}</p>}
         <label>
           Password
           <input
@@ -114,7 +122,7 @@ function SignupFormModal() {
             placeholder='Password'
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
+        {errors.password && <p style={{color:'red'}}>{errors.password}</p>}
         <label>
           Confirm Password
           <input
@@ -126,7 +134,7 @@ function SignupFormModal() {
             placeholder='Confirm Password'
           />
         </label>
-        {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
+        {errors.confirmPassword && <p style={{color:'red'}}>{errors.confirmPassword}</p>}
         <button disabled={err}type="submit">Sign Up</button>
       </form>
     </>

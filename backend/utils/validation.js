@@ -97,7 +97,6 @@ const validateEvent=[
     check('startDate')
         .toDate()
         .custom(value=>{
-            console.log(value)
             if(!value) throw new Error('Please enter a valid date format')
             if (value.getTime() <= Date.now()){
                 throw new Error('Start date must be in the future')
