@@ -59,7 +59,7 @@ function GroupShow() {
                     <div className='location'>{`${group.city}, ${group.state}`}</div>
                     <div className='add-info'>
                         <span>{`${groupEvents.length} Events`}</span>
-                        <span>.</span>
+                        <span>·</span>
                         <span>{group.private ? 'Private' : ''}</span>
                     </div>
                     <div>{`Organized by: ${group?.Organizer?.firstName} ${group?.Organizer?.lastName}`}</div>

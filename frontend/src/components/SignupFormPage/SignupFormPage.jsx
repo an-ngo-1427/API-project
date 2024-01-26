@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import * as sessionActions from '../../store/session';
+import { useModal } from '../../context/Modal';
 
 function SignupFormPage() {
   const dispatch = useDispatch();
@@ -13,14 +14,16 @@ function SignupFormPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
-
+  const {closeModal} = useModal();
+  const navigate = useNavigate()
   if (sessionUser) return <Navigate to="/" replace={true} />;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({})
     if (password === confirmPassword) {
       setErrors({});
-      return dispatch(
+      const data = await dispatch(
         sessionActions.signup({
           email,
           username,
@@ -28,17 +31,26 @@ function SignupFormPage() {
           lastName,
           password
         })
-      ).catch(async (res) => {
-        const data = await res.json();
-        if (data?.errors) {
-          setErrors(data.errors);
-        }
+      )
+      if(data.errors){
+        setErrors(data.errors)
+      }else{
+        closeModal();
+      }
+    }else{
+      setErrors({
+        confirmPassword: "Confirm Password field must be the same as the Password field"
       });
+
     }
-    return setErrors({
-      confirmPassword: "Confirm Password field must be the same as the Password field"
-    });
   };
+
+  const demoLogin = ()=>{
+    let credential = 'thenemo'
+    let password = 'password'
+    return dispatch(sessionActions.login({credential,password}))
+    .then(navigate('/'))
+  }
 
   return (
     <>
@@ -53,7 +65,7 @@ function SignupFormPage() {
             required
           />
         </label>
-        {errors.email && <p>{errors.email}</p>}
+        {errors.email && <p style={{color:'red'}}>{errors.email}</p>}
         <label>
           Username
           <input
@@ -63,7 +75,7 @@ function SignupFormPage() {
             required
           />
         </label>
-        {errors.username && <p>{errors.username}</p>}
+        {errors.username && <p style={{color:'red'}}>{errors.username}</p>}
         <label>
           First Name
           <input
@@ -73,7 +85,7 @@ function SignupFormPage() {
             required
           />
         </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
+        {errors.firstName && <p style={{color:'red'}}>{errors.firstName}</p>}
         <label>
           Last Name
           <input
@@ -83,7 +95,7 @@ function SignupFormPage() {
             required
           />
         </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
+        {errors.lastName && <p style={{color:'red'}}>{errors.lastName}</p>}
         <label>
           Password
           <input
@@ -93,7 +105,7 @@ function SignupFormPage() {
             required
           />
         </label>
-        {errors.password && <p>{errors.password}</p>}
+        {errors.password && <p style={{color:'red'}}>{errors.password}</p>}
         <label>
           Confirm Password
           <input
@@ -103,9 +115,10 @@ function SignupFormPage() {
             required
           />
         </label>
-        {errors.confirmPassword && <p>{errors.confirmPassword}</p>}
-        <button type="submit">Sign Up</button>
+        {errors.confirmPassword && <p style={{color:'red'}}>{errors.confirmPassword}</p>}
+        <button onClick={handleSubmit}type="submit">Sign Up</button>
       </form>
+      <div onClick={demoLogin}>login as demo user</div>
     </>
   );
 }
