@@ -153,7 +153,7 @@ router.get('/:eventId',async (req,res)=>{
     event.Venue = venue;
     event.numAttending = numAttending;
     event.Group.Organizer = organizer
-    console.log(event);
+
     res.json({
         ...event
     })

@@ -28,7 +28,7 @@ const initialState = {}
 function eventReducer(state=initialState,action){
     switch(action.type){
         case GET_EVENTS:{
-            const newObj = {...state};
+            const newObj = {};
             action.events.forEach(event=>newObj[event.id] = event)
             return newObj
         }

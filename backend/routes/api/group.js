@@ -469,13 +469,13 @@ router.post('/:groupId/events',[requireAuth,validateEvent],async (req,res)=>{
 
     if(req.user.id === group.organizerId || coHost[0]){
 
-        let{name,type,capacity,price,description,startDate,endDate} = req.body;
-        capacity = parseInt(capacity);
+        let{venueId,name,type,capacity,price,description,startDate,endDate} = req.body;
+        if(capacity) capacity = parseInt(capacity);
         price = parseFloat(price);
-
+        if(venueId) venueId = parseInt(venueId);
         let newEvent = await Event.create({
             groupId:parseInt(req.params.groupId),
-            venueId:parseInt(req.body.venueId),
+            venueId:venueId,
             name,
             type,
             capacity,

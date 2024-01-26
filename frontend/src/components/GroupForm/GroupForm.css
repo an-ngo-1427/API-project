@@ -1,0 +1,41 @@
+input{
+    width:22%;
+    font-family: 'Poor Story', system-ui;
+    font-size: x-large;
+}
+
+textarea{
+    width:22%;
+    height: 100px;
+    font-family: 'Poor Story', system-ui;
+    font-size: x-large;
+}
+
+select{
+    font-family: 'Poor Story', system-ui;
+    font-size: x-large;
+}
+
+form{
+    width:fit-content;
+    margin:auto;
+}
+
+.form-title{
+    margin-left: 250px;
+}
+
+.form-section{
+    border-bottom: 2px solid gray;
+    padding-bottom: 25px;
+}
+
+.form-button{
+    width: 15%;
+    margin: 30px 15px 9px 132px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: rgba(106, 106, 244, 0.642);
+}

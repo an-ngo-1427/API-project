@@ -19,7 +19,6 @@ export const getEventIdThunk = (eventId)=> async (dispatch)=>{
     const data = await response.json();
     if(response.ok){
         dispatch(getEventId(data))
-        console.log('event data',data)
         return data
     }
     return data

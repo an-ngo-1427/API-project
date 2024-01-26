@@ -11,7 +11,7 @@ function GroupDetails({props}){
         navigate(`/groups/${group.id}`)
     }
     return(
-        <div onClick={clickHandle} className = 'group-detail'>
+        <div onClick={clickHandle} className = 'item-detail'>
             <img alt={'no preview picture'} src={group.previewImage}/>
             <div className = 'details'>
                 <h2>{group.name}</h2>

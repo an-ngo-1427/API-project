@@ -12,10 +12,11 @@ function GroupList() {
     const events = useSelector(state => state.events)
 
     const groupArr = Object.values(groups)
-    if(groupArr.length) console.log(groupArr)
+
     useEffect(() => {
-        dispatch(getGroupsThunk());
-        dispatch(getEventsThunk());
+        dispatch(getGroupsThunk())
+        .then(()=>{dispatch(getEventsThunk())})
+
     }, [dispatch])
     return (
         <div>
@@ -23,7 +24,7 @@ function GroupList() {
                 <NavLink to='/events'>Events</NavLink>
                 <NavLink to='/groups'>Groups</NavLink>
             </div>
-            <span className='group-caption'>groups in MeetUp</span>
+            <h2 className='list-caption'>groups in Meet Nemo</h2>
             <div className='group-list'>
                 {groupArr.map(group => <GroupDetails key={group.id} props={{ group, events }} />)}
             </div>

@@ -11,7 +11,7 @@ export const getGroups = (groups)=>{
     }
 }
 
-// getting one group by Id
+
 
 
 // thunk action creators
@@ -26,7 +26,6 @@ export const getGroupsThunk = ()=>async (dispatch)=>{
     return data
 }
 
-// getting group by specified Id
 
 
 
@@ -35,8 +34,7 @@ const initialState = {}
 const groupReducer = (state=initialState,action)=>{
     switch(action.type){
         case GET_GROUPS:{
-            const newObj = {...state}
-
+            const newObj = {}
             action.groups.forEach(group=>{newObj[group.id] = group})
             return newObj;
         }

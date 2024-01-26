@@ -49,7 +49,34 @@ module.exports = {
         about:"Hanging out with Dory and Nemo, the shark baiters, to get the thrill and piss off the sharks",
         type:"Online",
         private:false,
-        city:"The Sharks' lair ",
+        city:"Sherman Fish tank",
+        state:"Australia",
+        organizerId:3,
+      },
+      {
+        name:"Tankhood of the cool fish",
+        about:"Nemo, newcomer of orange and white, you have been called forth to the summit of Mount Wannahockaloogie to join with us in the fraternal bonds of tankhood.",
+        type:"In person",
+        private:false,
+        city:"Ocean",
+        state:"Pacific Ocean",
+        organizerId:4,
+      },
+      {
+        name:"Aquarium Adventure",
+        about:"rehabilitation center for marine species. It also incorporates exhibits for educational purposes, such as several aquarium",
+        type:"In person",
+        private:false,
+        city:"Sydney",
+        state:"Australia",
+        organizerId:2,
+      },
+      {
+        name:"Torpedo research",
+        about:"Doing extensive researches on torpedos that are still live on the sunken World War II submarine ",
+        type:"Online",
+        private:true,
+        city:"Ocean",
         state:"Pacific Ocean",
         organizerId:3,
       },
@@ -67,7 +94,7 @@ module.exports = {
     options.tableName = 'Groups'
     const Op = Sequelize.Op
     await queryInterface.bulkDelete(options,{
-      name:{[Op.in]:['Finding Nemo','Finding Dory','Shark Baiting']}
+      name:{[Op.in]:['Finding Nemo','Finding Dory','Shark Baiting','Tankhood of the cool fish','Aquarium Adventure','Torpedo research','Hanging out With Darla Sherman']}
     })
   }
 };

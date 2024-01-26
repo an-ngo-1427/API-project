@@ -1,13 +1,9 @@
-import { NavLink } from 'react-router-dom'
-import nemoImg from '../../../../images/finding-nemo-artwork-kl9pn5yjupbums15.jpg'
-import squirtImg from '../../../../images/imgbin-squirt-finding-nemo-turtle-illustration-BLBHxBxKXmarT9cDasPPzruip.jpg'
-import groupImg from '../../../../images/pp_findingnemo_herobanner_19752_eb5648d2.jpeg'
-import mainImg from '../../../../images/pngtree-finding-dory-vector-png-image_6886575.png'
+import { NavLink, useNavigate } from 'react-router-dom'
 import './HomePage.css'
 import { useSelector } from 'react-redux'
 function HomePage() {
     const sessionUser = useSelector(state => state.session.user)
-
+    const navigate = useNavigate()
     return (
         <div className="home-page">
             <div className='introduction'>
@@ -21,7 +17,7 @@ function HomePage() {
                         </p>
 
                     </div>
-                    <img className = 'main-image' src={mainImg} />
+                    <img className = 'main-image' src='https://i.pinimg.com/736x/3f/d3/23/3fd323c193f6f75e936ce0b976c7823e.jpg' />
                 </div>
             </div>
             <div className='how'>
@@ -30,17 +26,20 @@ function HomePage() {
             </div>
             <div className="main-items">
                 <div className='item'>
-                    <img className='main-item-image' src={nemoImg}></img>
+                    <img className='main-item-image' src='https://i.pinimg.com/564x/e3/e5/dc/e3e5dc4143d77b3dcea61776d372928c.jpg'></img>
                     <NavLink to={'/groups'}>See All Groups</NavLink>
                 </div>
                 <div className='item'>
-                    <img className='main-item-image' src={squirtImg}></img>
+                    <img className='main-item-image' src='https://image.shutterstock.com/image-vector/kawaii-chibi-blue-tang-clown-260nw-2019033005.jpg'></img>
                     <NavLink to={`/events`}>Find an event</NavLink>
                 </div>
                 <div className='item'>
-                    <img className='main-item-image' src={groupImg}></img>
-                    <NavLink className={!sessionUser ? 'disabledLink' : ""} >Start a new group</NavLink>
+                    <img className='main-item-image' src='https://www.shutterstock.com/image-vector/fish-nemo-dori-cartoon-characters-600nw-2396691033.jpg'></img>
+                    <NavLink to='/groups/new' className={!sessionUser ? 'disabledLink' : ""} >Start a new group</NavLink>
                 </div>
+            </div>
+            <div className = 'signup'>
+                <button onClick={()=>{navigate('/signup')}}>Join Meet Nemo</button>
             </div>
         </div>
     )

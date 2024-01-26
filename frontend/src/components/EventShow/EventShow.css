@@ -10,8 +10,13 @@
     display: flex;
     flex-direction:row;
     gap: 100px;
+    border-bottom: 3px solid black;
 }
-
+.event-show{
+    padding: 50px 150px 50px;
+    margin-left: 150px;
+    width:1300px;
+}
 .event-group{
     display: flex;
     flex-direction: row;
@@ -38,12 +43,37 @@
     width:fit-content;
 }
 
-.event-show{
-    margin:auto;
-    font-size: large;
-}
 
 .event-group:hover{
     cursor: pointer;
     box-shadow: 3px 3px 3px 3px gray;
+}
+
+.event-info-item{
+    display: flex;
+    flex-direction: row;
+    gap:25px;
+    align-items: center;
+}
+
+.icon{
+    font-size: 45px;
+}
+
+.modal{
+    width: 60%;
+    margin: 30px 15px 9px 132px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.event-info-item>button{
+    width: 60%;
+    margin: 30px 15px 9px 132px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: inherit;
+    font-size: inherit;
 }

@@ -86,7 +86,7 @@ const validateEvent=[
         .exists({checkFalsy:true})
         .custom(value=>{
 
-            if(value<=0){
+            if(value<0){
                 throw new Error("Price is invalid")
             }
             return true
@@ -97,6 +97,8 @@ const validateEvent=[
     check('startDate')
         .toDate()
         .custom(value=>{
+            console.log(value)
+            if(!value) throw new Error('Please enter a valid date format')
             if (value.getTime() <= Date.now()){
                 throw new Error('Start date must be in the future')
             }
@@ -105,6 +107,7 @@ const validateEvent=[
     check('endDate')
         .toDate()
         .custom((value,{req})=>{
+            if(!value) throw new Error('Please enter a valid date format')
             if(value.getTime()<= req.body.startDate.getTime()){
                 // console.log(req.body.startDate)
                 throw new Error('End date is less than start date')
