@@ -16,8 +16,8 @@ function EventDelete({props}){
         <div>
             <h2>Confirm Delete</h2>
             <p>Are you sure you want to remove this event?</p>
-            <button onClick={(e)=>{handleClick(e)}}>Yes (Delete Event)</button>
-            <button onClick={closeModal}>No (Keep Event)</button>
+            <button className='yes-button'onClick={(e)=>{handleClick(e)}}>Yes (Delete Event)</button>
+            <button className = 'no-button'onClick={closeModal}>No (Keep Event)</button>
         </div>
     )
 }

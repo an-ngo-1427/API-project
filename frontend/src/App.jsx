@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import { Outlet, createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 // import LoginFormPage from './components/LoginFormPage/LoginFormPage';
 // import LoginFormPage from './components/LoginFormPage';
-// import SignupFormPage from './components/SignupFormPage';
+import SignupFormPage from './components/SignupFormPage';
+
 import Navigation from './components/Navigation/Navigation';
 import * as sessionActions from './store/session';
 import logo from '../../images/android-chrome-192x192.png'
@@ -86,6 +87,10 @@ const router = createBrowserRouter([
       {
         path: '/events/:eventId',
         element: <EventShow />
+      },
+      {
+        path: '/signup',
+        element:<SignupFormPage/>
       }
     ]
   }

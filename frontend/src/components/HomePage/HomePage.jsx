@@ -1,9 +1,9 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import './HomePage.css'
 import { useSelector } from 'react-redux'
 function HomePage() {
     const sessionUser = useSelector(state => state.session.user)
-
+    const navigate = useNavigate()
     return (
         <div className="home-page">
             <div className='introduction'>
@@ -37,6 +37,9 @@ function HomePage() {
                     <img className='main-item-image' src='https://www.shutterstock.com/image-vector/fish-nemo-dori-cartoon-characters-600nw-2396691033.jpg'></img>
                     <NavLink to='/groups/new' className={!sessionUser ? 'disabledLink' : ""} >Start a new group</NavLink>
                 </div>
+            </div>
+            <div className = 'signup'>
+                <button onClick={()=>{navigate('/signup')}}>Join Meet Nemo</button>
             </div>
         </div>
     )

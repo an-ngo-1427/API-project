@@ -28,7 +28,7 @@
 .description{
     display: flex;
     flex-direction: row;
-    margin:100px 20px 20px 100px;
+    margin: 102px 0px 49px 0px;
 }
 
 .description.text{
@@ -48,7 +48,7 @@
 }
 
 .main-image{
-    width: 35%;
+    width: 50%;
     height: 650px;
 }
 
@@ -67,4 +67,19 @@
 .header{
     font-size: xx-large;
     width:1800px;
+}
+
+.signup>button{
+    width: 25%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: rgba(106, 106, 244, 0.642);
+    text-decoration: none;
+}
+
+.signup{
+    text-align: center;
+    margin-top: 35px;
 }

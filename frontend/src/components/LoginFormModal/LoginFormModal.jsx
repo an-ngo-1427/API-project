@@ -47,6 +47,7 @@ function LoginFormModal() {
         <label>
           Username or Email
           <input
+            className='modal-input'
             type="text"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
@@ -56,6 +57,7 @@ function LoginFormModal() {
         <label>
           Password
           <input
+            className='modal-input'
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}

@@ -25,8 +25,8 @@ function GroupDelete({props}){
         <div className = 'group-delete'>
             <h2>Confirm Delete</h2>
             <p> Are you sure you want to remove this group?</p>
-            <button type="submit" onClick={(e)=>yesClick(e)}>{`Yes (Delete Group)`}</button>
-            <button onClick={closeModal}>{`No (Keep Group)`}</button>
+            <button className = 'yes-button' type="submit" onClick={(e)=>yesClick(e)}>{`Yes (Delete Group)`}</button>
+            <button className = 'no-button' onClick={closeModal}>{`No (Keep Group)`}</button>
 
         </div>
     )

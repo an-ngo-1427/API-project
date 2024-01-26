@@ -68,13 +68,13 @@ function GroupShow() {
                         <div className='organizer button'>
                             <button className='create-events'><NavLink to={`/groups/${groupId}/events/new`}>Create an event</NavLink></button>
                             <button className= 'update'><NavLink to={`/groups/${groupId}/edit`}>Update</NavLink></button>
-                            <button className = 'delete'>
+                            <div className = 'delete'>
                                 <OpenModalButton
                                 modalComponent = {<GroupDelete props = {{group,navigate,setDeleted}}/>}
                                 buttonText = 'Delete'
 
                                 />
-                            </button>
+                            </div>
                         </div>
                     }
 

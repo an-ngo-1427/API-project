@@ -31,7 +31,7 @@ function EventList() {
                 <NavLink to='/events'>Events</NavLink>
                 <NavLink to='/groups'>Groups</NavLink>
             </div>
-            <h2 className='list-caption'>{`events in Meetup (${eventsArr.length})`}</h2>
+            <h2 className='list-caption'>{`events in Meet Nemo (${eventsArr.length})`}</h2>
             <div className='events-list'>
                 {commingEvents.map(event => <EventDetails key = {event.id} event = {event} />)}
                 {pastEvents.map(event=><EventDetails key = {event.id} event = {event} />)}

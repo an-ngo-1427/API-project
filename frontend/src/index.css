@@ -78,3 +78,26 @@ body{
 .home-page{
     padding-right: 147px;
 }
+
+.modal-input{
+    width:50%;
+
+}
+
+.yes-button{
+    width:45%;
+    padding: 15px 5px 15px 5px;
+    font-family: inherit;
+    font-size: 20px;
+    margin: 15px;
+    background-color: rgb(180, 9, 9);
+    color:white
+
+}
+
+.no-button{
+    width:45%;
+    padding: 15px 5px 15px 5px;
+    font-family: inherit;
+    font-size: 20px;
+}

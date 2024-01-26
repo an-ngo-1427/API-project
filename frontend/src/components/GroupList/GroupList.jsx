@@ -24,7 +24,7 @@ function GroupList() {
                 <NavLink to='/events'>Events</NavLink>
                 <NavLink to='/groups'>Groups</NavLink>
             </div>
-            <h2 className='list-caption'>groups in MeetUp</h2>
+            <h2 className='list-caption'>groups in Meet Nemo</h2>
             <div className='group-list'>
                 {groupArr.map(group => <GroupDetails key={group.id} props={{ group, events }} />)}
             </div>
