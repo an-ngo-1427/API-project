@@ -24,6 +24,9 @@ export const getEventIdThunk = (eventId)=> async (dispatch)=>{
     return data
 }
 
+// update an event
+
+
 // reducer
 const initialState = {}
 function eventIdReducer(state=initialState,action){
