@@ -1,0 +1,10 @@
+.event-form-button{
+    width: 15%;
+    margin: 30px 15px 9px 132px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: inherit;
+    font-size: inherit;
+    background-color: rgba(106, 106, 244, 0.642);
+    cursor: pointer;
+}

@@ -83,11 +83,14 @@ function EventShow() {
                                 <div className='icon'><GrLocationPin /></div>
                                 <div>{event.type}</div>
 
+
+                            </div>
+                            <div className= 'event-button'>
+                                {organizer.id === user?.id && <button onClick = {()=>{navigate(`/groups/${currGroup?.id}/events/${event.id}/edit`)}}>Update</button>}
                                 {organizer.id === user?.id && <OpenModalButton
                                     modalComponent={<EventDelete props ={{event,setDeleted}}/>}
                                     buttonText='Delete'
                                 />}
-
 
                             </div>
                         </div>

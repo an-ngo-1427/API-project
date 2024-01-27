@@ -56,6 +56,10 @@
     font-size: xx-large;
     text-decoration: none;
 }
+.item>a:hover{
+    text-decoration: underline;
+    color:teal;
+}
 
 .how{
     margin:50px auto 20px;

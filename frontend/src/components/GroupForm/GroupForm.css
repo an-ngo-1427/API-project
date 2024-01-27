@@ -1,11 +1,11 @@
 input{
-    width:22%;
+    width:70%;
     font-family: 'Poor Story', system-ui;
     font-size: x-large;
 }
 
 textarea{
-    width:22%;
+    width:70%;
     height: 100px;
     font-family: 'Poor Story', system-ui;
     font-size: x-large;
@@ -17,8 +17,8 @@ select{
 }
 
 form{
-    width:fit-content;
     margin:auto;
+    width:1000px;
 }
 
 .form-title{
@@ -30,6 +30,7 @@ form{
     padding-bottom: 25px;
 }
 
+
 .form-button{
     width: 15%;
     margin: 30px 15px 9px 132px;
@@ -38,6 +39,7 @@ form{
     font-family: inherit;
     font-size: inherit;
     background-color: rgba(106, 106, 244, 0.642);
+    cursor: pointer;
 }
 
 .form-list>li{

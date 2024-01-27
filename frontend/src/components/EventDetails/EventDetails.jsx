@@ -16,7 +16,7 @@ function EventDetails({ event }) {
             <div className='details'>
                 <div className='add-info'>
                     <span>{day}</span>
-                    <span>.</span>
+                    <span>·</span>
                     <span>{time}</span>
                 </div>
 

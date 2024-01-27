@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux'
 import {NavLink} from 'react-router-dom'
 import EventForm from './components/EventForm';
 import UpdateGroup from './components/UpdateGroup';
+import UpdateEvent from './components/UpdateEvent';
 function Layout() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
       {
         path: '/events/:eventId',
         element: <EventShow />
+      },
+      {
+        path:'/groups/:groupId/events/:eventId/edit',
+        element:<UpdateEvent/>
       },
       {
         path: '/signup',
