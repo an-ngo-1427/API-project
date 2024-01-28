@@ -87,4 +87,5 @@ margin: auto;
     font-family: inherit;
     font-size: inherit;
     background-color: rgba(106, 106, 244, 0.642);
+    cursor: pointer;
 }
