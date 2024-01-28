@@ -65,6 +65,7 @@ function GroupForm({props}){
         else{
             let city = location.split(',')[0];
             let state = location.split(',')[1];
+            console.log(city)
             const reqObj = {
                 name,
                 about:description,

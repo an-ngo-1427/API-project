@@ -76,6 +76,7 @@ function EventForm({eventId}){
         if(type.length <= 0) err.type = "Event type is required"
         if(+capacity <= 0 ) err.capacity = "Capacity is required"
         if(price.length <= 0) err.price = 'Price is required'
+        if( price.length > 0 && isNaN(price)) err.price = 'Price must be a number'
         if(startDate.length <=0) err.startDate = "Start date is required"
         if(endDate.length <= 0 ) err.endDate = 'End date is required'
         if(     (!imgUrl.includes('.png',imgUrl.length-5))&&
@@ -83,6 +84,7 @@ function EventForm({eventId}){
                 (!imgUrl.includes('.jpg',imgUrl.length-5))) err.imgUrl = "Image URL must end in .png, .jpg, or .jpeg"
         if(description.length < 30) err.description = "Please include at least 30 characters"
         setErrObj(err);
+        console.log(price ===  'number')
     },[name,type,capacity,price,startDate,endDate,imgUrl,description])
 
 
@@ -152,7 +154,9 @@ function EventForm({eventId}){
                     <input
                         placeholder='Event Name'
                         value={name}
-                        onChange={(e)=>{setName(e.target.value)}}
+                        onChange={(e)=>{
+                            setName(e.target.value)
+                        }}
                     />
                 {formErr && <div style={{color:'red'}}>{errObj.name}</div>}
                 </div>
@@ -182,7 +186,9 @@ function EventForm({eventId}){
                     <h3>{`What is the price for your event?`}</h3>
                     <input type="text" placeholder='0'
                         value={price}
-                        onChange={(e)=>{setPrice(e.target.value)}}
+                        onChange={(e)=>{
+                            setPrice(e.target.value)}
+                        }
                     />
                 </div>
                 {formErr && <div style={{color:'red'}}>{errObj.price}</div>}
