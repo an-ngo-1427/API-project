@@ -60,7 +60,52 @@ module.exports = {
     },
     {
       eventId:3,
+      url:'https://i.pinimg.com/564x/91/e9/12/91e91232c967cc6042587fff5f3f0b5f.jpg',
+      preview:true
+    },
+    {
+      eventId:4,
       url:'https://i.pinimg.com/564x/a8/b5/35/a8b535046072f333c7c9171b8cd1f90c.jpg',
+      preview:true
+    },
+    {
+      eventId:5,
+      url:'https://i.pinimg.com/474x/70/38/ad/7038adfaa0d55981ec73d3bdfaa6c181.jpg',
+      preview:true
+    },
+    {
+      eventId:6,
+      url:'https://i.pinimg.com/474x/00/75/67/00756769a163e8d665b8abdf882584d6.jpg',
+      preview:true
+    },
+    {
+      eventId:1,
+      url:'https://i.pinimg.com/474x/3f/5f/5e/3f5f5e53c8dc134b58717974fc411f27.jpg',
+      preview:true
+    },
+    {
+      eventId:2,
+      url:'https://i.pinimg.com/474x/3d/06/35/3d0635c8db3cd0e6b45236aa9ff3a121.jpg',
+      preview:true
+    },
+    {
+      eventId:3,
+      url:'https://i.pinimg.com/474x/6c/4c/24/6c4c249b458ba19a407eccd240ed8808.jpg',
+      preview:true
+    },
+    {
+      eventId:4,
+      url:'https://i.pinimg.com/474x/7b/46/f5/7b46f5ffa0e65b33e4474a31e87ecef3.jpg',
+      preview:true
+    },
+    {
+      eventId:5,
+      url:'https://i.pinimg.com/474x/0e/a7/6b/0ea76b48bb1953dd0af603a1315136ea.jpg',
+      preview:true
+    },
+    {
+      eventId:6,
+      url:'https://i.pinimg.com/474x/48/ac/5c/48ac5c32a6889841591257d885e25d52.jpg',
       preview:true
     },
    ],{validate:true})
@@ -76,7 +121,7 @@ module.exports = {
     const Op = Sequelize.Op
     options.tableName = 'EventImages'
     await queryInterface.bulkDelete(options,{
-      eventId:{[Op.in]:[1,2,3]}
+      eventId:{[Op.in]:[1,2,3,4,5,6]}
     })
   }
 };

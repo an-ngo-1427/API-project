@@ -60,7 +60,7 @@ router.get('/',validateQuery,async (req,res)=>{
             }
         ],
         attributes:{
-            exclude:['description','capacity','price']
+            exclude:['capacity','price']
         },
         ...queryObj
     });
@@ -93,7 +93,7 @@ router.get('/',validateQuery,async (req,res)=>{
         })
 
         //getting preview image url
-        let imageUrl;
+        let imageUrl = 'no preview';
         if(!event.EventImages.length){
             imageUrl = "no pictures found"
         }
@@ -102,8 +102,6 @@ router.get('/',validateQuery,async (req,res)=>{
                 if(image.url){
                     imageUrl = image.url
                 }
-            }else{
-                imageUrl = "no preview"
             }
         })
         event.previewImage = imageUrl;

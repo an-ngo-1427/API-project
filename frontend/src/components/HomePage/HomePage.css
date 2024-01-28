@@ -15,10 +15,16 @@
 .item{
     display:flex;
     flex-direction: column;
-    width:fit-content;
+    width:250px;
     justify-content: center;
     align-items: center;
+    text-align: center;
+    gap: 15px;
 }
+.item>div{
+    width:220px;
+}
+
 
 .disabledLink{
     pointer-events: none;

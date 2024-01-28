@@ -62,11 +62,16 @@
     gap:50px;
     align-items: center;
 }
+.head-session>a:hover{
+    text-decoration: underline;
+    color:teal;
+}
 
 a{
     text-decoration: none;
     color:inherit;
 }
+
 
 body{
     font-family: 'Poor Story', system-ui;
@@ -94,7 +99,8 @@ body{
     font-size: 20px;
     margin: 15px;
     background-color: rgb(180, 9, 9);
-    color:white
+    color:white;
+    cursor: pointer;
 
 }
 
@@ -103,4 +109,5 @@ body{
     padding: 15px 5px 15px 5px;
     font-family: inherit;
     font-size: 20px;
+    cursor: pointer;
 }
