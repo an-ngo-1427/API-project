@@ -15,10 +15,16 @@
 .item{
     display:flex;
     flex-direction: column;
-    width:fit-content;
+    width:250px;
     justify-content: center;
     align-items: center;
+    text-align: center;
+    gap: 15px;
 }
+.item>div{
+    width:220px;
+}
+
 
 .disabledLink{
     pointer-events: none;
@@ -55,6 +61,10 @@
 .item>a{
     font-size: xx-large;
     text-decoration: none;
+}
+.item>a:hover{
+    text-decoration: underline;
+    color:teal;
 }
 
 .how{

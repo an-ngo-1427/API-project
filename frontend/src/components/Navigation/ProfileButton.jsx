@@ -39,7 +39,7 @@ function ProfileButton({ user }) {
 
   return (
     <>
-      <button onClick={toggleMenu}>
+      <button style={{cursor:'pointer'}} onClick={toggleMenu}>
         <i className="fas fa-user-circle" />
       </button>
       <ul className={ulClassName} ref={ulRef}>
@@ -48,7 +48,7 @@ function ProfileButton({ user }) {
         <li><NavLink to='/groups'>See all groups</NavLink></li>
         <li><NavLink to = '/events'>See all events</NavLink></li>
         <li>
-          <button onClick={logout}>Log Out</button>
+          <button style={{cursor:'pointer'}} onClick={logout}>Log Out</button>
         </li>
       </ul>
     </>

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import * as sessionActions from '../../store/session';
 import { useModal } from '../../context/Modal';
-
+import './SignupForm.css'
 function SignupFormPage() {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
@@ -116,9 +116,9 @@ function SignupFormPage() {
           />
         </label>
         {errors.confirmPassword && <p style={{color:'red'}}>{errors.confirmPassword}</p>}
-        <button onClick={handleSubmit}type="submit">Sign Up</button>
+        <button className = 'demo-button' onClick={handleSubmit}type="submit">Sign Up</button>
       </form>
-      <div onClick={demoLogin}>login as demo user</div>
+      <div className ='demo' style={{}} onClick={demoLogin}>login as demo user</div>
     </>
   );
 }

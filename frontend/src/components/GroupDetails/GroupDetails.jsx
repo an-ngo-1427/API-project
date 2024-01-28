@@ -19,8 +19,8 @@ function GroupDetails({props}){
                 <p>{group.about}</p>
                 <div className = 'add-info'>
                     <span>{`${groupEvents.length} Events`}</span>
-                    <span>.</span>
-                    <span>{group.private? 'Private':''}</span>
+                    <span>·</span>
+                    <span>{group.private? 'Private':'Public'}</span>
                 </div>
             </div>
         </div>

@@ -2,6 +2,11 @@
   position: absolute;
 }
 
+.profile-dropdown>li>a:hover{
+  text-decoration: underline;
+  color:teal;
+}
+
 .profile-dropdown>li>button{
   width:150px;
   font-size: x-large;

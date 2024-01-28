@@ -26,10 +26,12 @@ function EventShow() {
 
     let data = useRef(null);
     let organizer;
-    Object.values(event).length ? organizer = event.Group.Organizer : organizer = '';
+
+    Object.values(event).length ? organizer = event.Group?.Organizer : organizer = '';
 
     useEffect(() => {
         data.current = dispatch(getEventIdThunk(eventId));
+        console.log('entered')
         if(deleted){
             navigate(`/groups/${event.Group.id}`,{replace:true})
         }
@@ -52,18 +54,18 @@ function EventShow() {
             <div className='event-header'>
                 <div className='event-name'>
                     <h2>{event.name}</h2>
-                    <span>{`Hosted By ${organizer.firstName} ${organizer.lastName}`}</span>
+                    <span>{`Hosted By ${organizer?.firstName} ${organizer?.lastName}`}</span>
                 </div>
                 <div className='event-overview'>
                     <div className='group-pic'>
-                        {event.EventImages.map(image=><img key={image.id} src = {`${image.url}`}/>)}
+                        {event.EventImages?.map(image=><img key={image.id} src = {`${image.url}`}/>)}
                     </div>
                     <div>
                         <div onClick={handleClick} className='event-group'>
                             <img alt='no images' src={currGroup.GroupImages?.length? currGroup.GroupImages[0].url:''}/>
                             <div className='group-name'>
-                                <h3>{event.Group.name}</h3>
-                                <span>{event.Group.private ? 'Private' : 'Public'}</span>
+                                <h3>{event.Group?.name}</h3>
+                                <span>{event.Group?.private ? 'Private' : 'Public'}</span>
                             </div>
                         </div>
                         <div className='event-info'>
@@ -83,11 +85,14 @@ function EventShow() {
                                 <div className='icon'><GrLocationPin /></div>
                                 <div>{event.type}</div>
 
-                                {organizer.id === user?.id && <OpenModalButton
+
+                            </div>
+                            <div className= 'event-button'>
+                                {organizer?.id === user?.id && <button onClick = {()=>{navigate(`/groups/${currGroup?.id}/events/${event.id}/edit`)}}>Update</button>}
+                                {organizer?.id === user?.id && <OpenModalButton
                                     modalComponent={<EventDelete props ={{event,setDeleted}}/>}
                                     buttonText='Delete'
                                 />}
-
 
                             </div>
                         </div>

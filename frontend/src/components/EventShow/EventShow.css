@@ -77,3 +77,17 @@
     font-family: inherit;
     font-size: inherit;
 }
+
+.event-button{
+    display: flex;
+    gap:15px;
+}
+
+.event-button>button{
+    width:50%;
+    padding-top:10px;
+    padding-bottom: 10px;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: pointer;
+}

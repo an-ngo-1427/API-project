@@ -21,21 +21,30 @@ function HomePage() {
                 </div>
             </div>
             <div className='how'>
-                <h3>How Meetup works</h3>
+                <h3>How Meet Nemo works</h3>
                 <p>Manor we shall merit by chief wound no or would</p>
             </div>
             <div className="main-items">
                 <div className='item'>
                     <img className='main-item-image' src='https://i.pinimg.com/564x/e3/e5/dc/e3e5dc4143d77b3dcea61776d372928c.jpg'></img>
-                    <NavLink to={'/groups'}>See All Groups</NavLink>
+                    <NavLink title={'click to see all groups'} to={'/groups'}>See All Groups</NavLink>
+                    <div>
+                        See what groups are available in your area as well as online
+                    </div>
                 </div>
                 <div className='item'>
                     <img className='main-item-image' src='https://image.shutterstock.com/image-vector/kawaii-chibi-blue-tang-clown-260nw-2019033005.jpg'></img>
-                    <NavLink to={`/events`}>Find an event</NavLink>
+                    <NavLink title={'click to see all the events'} to={`/events`}>Find an event</NavLink>
+                    <div>
+                        come to exiciting events that are happening in your community
+                    </div>
                 </div>
                 <div className='item'>
                     <img className='main-item-image' src='https://www.shutterstock.com/image-vector/fish-nemo-dori-cartoon-characters-600nw-2396691033.jpg'></img>
-                    <NavLink to='/groups/new' className={!sessionUser ? 'disabledLink' : ""} >Start a new group</NavLink>
+                    <NavLink title={'click to create a new group'} to='/groups/new' className={!sessionUser ? 'disabledLink' : ""} >Start a new group</NavLink>
+                    <div>
+                        want to make a difference? start your own group!
+                    </div>
                 </div>
             </div>
             <div className = 'signup'>
